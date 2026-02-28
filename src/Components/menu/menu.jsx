@@ -11,15 +11,15 @@ const Menu = () => {
 
   return (
     <div
-      className={`fixed top-0 right-0 z-50 h-full w-60 bg-white border  border-[#E2E8F0] ${
+      className={`fixed top-0 right-0 z-50 h-full w-60 border drop-shadow-2xl ${
         isSidebarOpen ? "translate-x-0" : "translate-x-full"
-      }`}
+      }   ${theme == "dark" ? "bg-[#1E293B] border-[#334155]" : "bg-[#F8FAFC]   border-[#E2E8F0]" }`}
     >
-      <div className=" grid grid-cols-1 divide-y divide-[#E2E8F0] auto-rows-[50px] border-b border-[#E2E8F0]">
+      <div className={` grid grid-cols-1 divide-y  auto-rows-[50px] border-b px-2 ${theme == "dark" ? "divide-[#334155] border-[#334155]" :"divide-[#E2E8F0] border-[#E2E8F0]"}`}>
         <ToggleMenu/>
-        <div className="flex items-center">
+        <div className={`flex items-center ${theme == "dark" ? "text-white" :"text-black" }`}>
             <button
-              className="bg-white w-full   capitalize  flex gap-5"
+              className=" w-full   capitalize  flex gap-5 bg-transparent"
               onClick={toggleTheme}
             >
               {theme == "light" ? (
