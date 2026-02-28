@@ -1,10 +1,12 @@
 import React from "react";
 
 import useMenu from "../../Context/Menu/MenuContext";
+import useTheme from "../../Context/Theme/ThemeContext";
 const ToggleMenu = () => {
   const toggleMenu = useMenu((state) => state.toggleMenu);
+  const theme = useTheme((state) => state.theme);
   return (
-    <div onClick={toggleMenu} className=" flex items-center gap-4">
+    <div onClick={toggleMenu} className={` flex items-center gap-4 ${theme == "dark" ? "text-white" :"text-black" }`}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
