@@ -8,7 +8,7 @@ const Header = () => {
   const theme = useTheme((state) => state.theme);
   const toggle = useTheme((state) => state.toggle);
   return (
-    <div className={`gride grid-rows-2 mt-2 `}>
+    <div className={`gride grid-rows-2 pt-2 `}>
       <div className={`row1 flex  justify-between items-center mx-4 mb-3`}>
         <Headerlocation />
         <MobileMenu />

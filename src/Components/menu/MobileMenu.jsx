@@ -1,18 +1,21 @@
-import React from "react";
+
 import useTheme from "../../Context/Theme/ThemeContext";
-import { useState } from "react";
+
+import Menu from "./menu";
+import useMenu from "../../Context/Menu/MenuContext";
 
 const MobileMenu = () => {
   const theme = useTheme((state) => state.theme);
-  const [open, setOpen] = useState(false);
-
+  const isSidebarOpen = useMenu((state) => state.isSidebarOpen);
+  const toggleMenu = useMenu((state) => state.toggleMenu);
+  
   return (
     <div className="row2">
       <div
         className={`profile ${theme == "dark" ? "text-white" : "text-black"}`}
-        onClick={() => setOpen(!open)}
+        onClick={toggleMenu}
       >
-        {open ? (
+        {isSidebarOpen ? (
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -43,8 +46,11 @@ const MobileMenu = () => {
             />
           </svg>
         )}
+        
       </div>
+      <Menu />
     </div>
+    
   );
 };
 
