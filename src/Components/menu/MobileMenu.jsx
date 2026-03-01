@@ -10,7 +10,7 @@ const MobileMenu = () => {
   const toggleMenu = useMenu((state) => state.toggleMenu);
   
   return (
-    <div className="row2">
+    <div className="row2 lg:hidden">
       <div
         className={`profile ${theme == "dark" ? "text-white" : "text-black"}`}
         onClick={toggleMenu}

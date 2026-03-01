@@ -5,7 +5,7 @@ const Headerlocation = () => {
   const theme = useTheme((state) => state.theme);
   const toggle = useTheme((state) => state.toggle);
   return (
-    <div className="col1">
+    <div className="col1 flex flex-col justify-center">
       <div className="location">
         <p className={`font-bold text-xl ${theme == "dark" ? "text-[#F1F5F9]" : "text-black"}`}>Singhpur</p>
       </div>

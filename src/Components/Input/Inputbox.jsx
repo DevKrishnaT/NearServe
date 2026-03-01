@@ -10,10 +10,10 @@ const Inputbox = () => {
 
   return (
     
-    <div className={`input border flex  rounded-2xl h-10 items-center px-2 ${theme == "dark" ? "border-white text-white placeholder:text-white" : "border-black"} `}>
+    <div className={`input border flex w-full  rounded-2xl h-10 lg:h-12 items-center px-2 ${theme == "dark" ? "border-white text-white placeholder:text-white" : "border-black"} `}>
       <input
         type="text"
-        className="flex-8  border-0 flex px-2 items-center h-full focus:outline-0"
+        className="flex-8  border-0 flex px-2 items-center h-full w-full focus:outline-0"
         placeholder="Search for service"
       />
       <svg

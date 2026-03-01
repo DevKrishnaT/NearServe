@@ -6,7 +6,7 @@ const ToggleMenu = () => {
   const toggleMenu = useMenu((state) => state.toggleMenu);
   const theme = useTheme((state) => state.theme);
   return (
-    <div onClick={toggleMenu} className={` flex items-center gap-4 ${theme == "dark" ? "text-white" :"text-black" }`}>
+    <div onClick={toggleMenu} className={` flex items-center gap-4 ${theme == "dark" ? "text-white" :"text-black" } px-2`}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"

@@ -1,0 +1,231 @@
+/* ===== Metropolis ===== */
+
+/* Thin */
+@font-face {
+  font-family: "Metropolis";
+  src: url("../assets/fonts/Metropolis/Metropolis-Thin.woff2") format("woff2");
+  font-weight: 100;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Metropolis";
+  src: url("../assets/fonts/Metropolis/Metropolis-ThinItalic.woff2") format("woff2");
+  font-weight: 100;
+  font-style: italic;
+}
+
+/* Extra Light */
+@font-face {
+  font-family: "Metropolis";
+  src: url("../assets/fonts/Metropolis/Metropolis-ExtraLight.woff2") format("woff2");
+  font-weight: 200;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Metropolis";
+  src: url("../assets/fonts/Metropolis/Metropolis-ExtraLightItalic.woff2") format("woff2");
+  font-weight: 200;
+  font-style: italic;
+}
+
+/* Light */
+@font-face {
+  font-family: "Metropolis";
+  src: url("../assets/fonts/Metropolis/Metropolis-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Metropolis";
+  src: url("../assets/fonts/Metropolis/Metropolis-LightItalic.woff2") format("woff2");
+  font-weight: 300;
+  font-style: italic;
+}
+
+/* Regular */
+@font-face {
+  font-family: "Metropolis";
+  src: url("../assets/fonts/Metropolis/Metropolis-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Metropolis";
+  src: url("../assets/fonts/Metropolis/Metropolis-RegularItalic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+}
+
+/* Medium */
+@font-face {
+  font-family: "Metropolis";
+  src: url("../assets/fonts/Metropolis/Metropolis-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Metropolis";
+  src: url("../assets/fonts/Metropolis/Metropolis-MediumItalic.woff2") format("woff2");
+  font-weight: 500;
+  font-style: italic;
+}
+
+/* SemiBold */
+@font-face {
+  font-family: "Metropolis";
+  src: url("../assets/fonts/Metropolis/Metropolis-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Metropolis";
+  src: url("../assets/fonts/Metropolis/Metropolis-SemiBoldItalic.woff2") format("woff2");
+  font-weight: 600;
+  font-style: italic;
+}
+
+/* Bold */
+@font-face {
+  font-family: "Metropolis";
+  src: url("../assets/fonts/Metropolis/Metropolis-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Metropolis";
+  src: url("../assets/fonts/Metropolis/Metropolis-BoldItalic.woff2") format("woff2");
+  font-weight: 700;
+  font-style: italic;
+}
+
+/* Extra Bold */
+@font-face {
+  font-family: "Metropolis";
+  src: url("../assets/fonts/Metropolis/Metropolis-ExtraBold.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Metropolis";
+  src: url("../assets/fonts/Metropolis/Metropolis-ExtraBoldItalic.woff2") format("woff2");
+  font-weight: 800;
+  font-style: italic;
+}
+
+/* Black */
+@font-face {
+  font-family: "Metropolis";
+  src: url("../assets/fonts/Metropolis/Metropolis-Black.woff2") format("woff2");
+  font-weight: 900;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Metropolis";
+  src: url("../assets/fonts/Metropolis/Metropolis-BlackItalic.woff2") format("woff2");
+  font-weight: 900;
+  font-style: italic;
+}
+
+
+
+
+/* ===== ProximaNova ===== */
+
+@font-face {
+  font-family: "ProximaNova";
+  src: url("../assets/fonts/proxima-nova/ProximaNova-Thin.woff2") format("woff2");
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "ProximaNova";
+  src: url("../assets/fonts/proxima-nova/ProximaNova-ThinIt.woff2") format("woff2");
+  font-weight: 100;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "ProximaNova";
+  src: url("../assets/fonts/proxima-nova/ProximaNova-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "ProximaNova";
+  src: url("../assets/fonts/proxima-nova/ProximaNova-LightIt.woff2") format("woff2");
+  font-weight: 300;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "ProximaNova";
+  src: url("../assets/fonts/proxima-nova/ProximaNova-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "ProximaNova";
+  src: url("../assets/fonts/proxima-nova/ProximaNova-RegularIt.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "ProximaNova";
+  src: url("../assets/fonts/proxima-nova/ProximaNova-Semibold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "ProximaNova";
+  src: url("../assets/fonts/proxima-nova/ProximaNova-SemiboldIt.woff2") format("woff2");
+  font-weight: 600;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "ProximaNova";
+  src: url("../assets/fonts/proxima-nova/ProximaNova-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "ProximaNova";
+  src: url("../assets/fonts/proxima-nova/ProximaNova-BoldIt.woff2") format("woff2");
+  font-weight: 700;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "ProximaNova";
+  src: url("../assets/fonts/proxima-nova/ProximaNova-Extrabld.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "ProximaNova";
+  src: url("../assets/fonts/proxima-nova/ProximaNova-ExtrabldIt.woff2") format("woff2");
+  font-weight: 800;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "ProximaNova";
+  src: url("../assets/fonts/proxima-nova/ProximaNova-Black.woff2") format("woff2");
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "ProximaNova";
+  src: url("../assets/fonts/proxima-nova/ProximaNova-BlackIt.woff2") format("woff2");
+  font-weight: 900;
+  font-style: italic;
+}
+
