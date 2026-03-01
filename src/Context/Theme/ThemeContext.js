@@ -5,7 +5,7 @@ const useTheme = create(
   persist(
     (set, get) => ({
       theme: "light",
-      toggle: () =>
+      toggleTheme: () =>
         set((state) => ({
           theme: state.theme === "light" ? "dark" : "light",
         })),
