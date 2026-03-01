@@ -4,7 +4,7 @@ import useTheme from "../../../Context/Theme/ThemeContext";
 const DescktopMenu = () => {
     const theme = useTheme((state) => state.theme);
   return (
-    <div className={`hidden lg:flex text-xl gap-1 items-center ${theme == "dark" ? "text-[#F1F5F9]" : "text-[#0F172A]"}`}>
+    <div className={`hidden lg:flex text-xl gap-1 items-center ${theme == "dark" ? "text-[#F1F5F9]" : "text-[#0F172A]"} cursor-pointer`}>
       Account{" "}
       <svg
         xmlns="http://www.w3.org/2000/svg"

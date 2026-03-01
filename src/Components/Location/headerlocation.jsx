@@ -1,11 +1,14 @@
 import React from "react";
 import useTheme from "../../Context/Theme/ThemeContext";
+import useLocation from "../../Context/Location/useLocation";
+import LocationSelector from "./isOpen/locationSelector";
 
 const Headerlocation = () => {
   const theme = useTheme((state) => state.theme);
-  const toggle = useTheme((state) => state.toggle);
+  const togglelocationbar = useLocation((state) => state.togglelocationbar); 
   return (
-    <div className="col1 flex flex-col justify-center">
+    <>
+    <div className="col1 flex flex-col justify-center cursor-pointer" onClick={togglelocationbar}>
       <div className="location">
         <p className={`font-bold text-xl ${theme == "dark" ? "text-[#F1F5F9]" : "text-black"}`}>Singhpur</p>
       </div>
@@ -26,7 +29,10 @@ const Headerlocation = () => {
           />
         </svg>
       </div>
+      
     </div>
+    <LocationSelector/>
+    </>
   );
 };
 

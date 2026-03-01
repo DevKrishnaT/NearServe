@@ -8,7 +8,7 @@ const App = () => {
   const toggleTheme = useTheme((state) => state.toggleTheme);
   return (
     <div className={`${theme == "dark" ? "bg-[#0F172A]" : "bg-white"} h-full`}>
-      <Header/>
+      <Header />
     
     </div>
   )
