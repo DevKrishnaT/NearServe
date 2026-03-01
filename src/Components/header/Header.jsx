@@ -20,7 +20,7 @@ const Header = () => {
       </div>
     
       <div className={`row2 mx-3 lg:w-full`}>
-        <Inputbox />
+        <Inputbox placeholderText={"search for Service"} />
       </div>
         <DescktopMenu/>
         <ThemeToggle />
