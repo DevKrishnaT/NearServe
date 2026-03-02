@@ -10,9 +10,9 @@ const LoginPop = () => {
   console.log("Login state:", isLoginOpen);
   if (!isLoginOpen) return null;
   return (
-    <div className={`fixed inset-0`}>
+    <div className={`fixed inset-0 flex justify-center items-center`}>
       <div
-        className={`h-100 w-150 flex flex-col ${theme === "dark" ? "bg-[#1E293B]" : "bg-[#F8FAFC]"} `}
+        className={`h-80 w-140 flex flex-col  rounded-2xl ${theme === "dark" ? "bg-[#1E293B]" : "bg-[#F8FAFC]"} `}
       >
         <Loginlayout />
       </div>
