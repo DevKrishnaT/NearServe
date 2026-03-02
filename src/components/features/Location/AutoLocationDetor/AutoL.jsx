@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import useTheme from "../../Context/Theme/ThemeContext";
-import useLocation from "../../Context/Location/useLocation";
+import useTheme from "../../../../Context/Theme/ThemeContext";
+import useLocation from "../../../../Context/Location/useLocation";
+
 
 const AutoL = () => {
   const theme = useTheme((state) => state.theme);
@@ -42,10 +43,10 @@ const AutoL = () => {
     <div className="flex flex-col items-start gap-2">
       <button
         onClick={detectLocation}
-        className={`px-4  flex py-2 rounded-md font-semibold transition gap-1 items-center ${
+        className={`flex py-2 rounded-md font-semibold transition gap-1 items-center ${
           theme === "dark"
-            ? "bg-darkPrimary text-white"
-            : "bg-primary text-white"
+            ? " text-[#F1F5F9]"
+            : " text-[#0F172A]"
         }`}
       >
         <svg

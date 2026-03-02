@@ -1,8 +1,10 @@
 import React from "react";
-import useTheme from "../../../Context/Theme/ThemeContext";
-import useLocation from "../../../Context/Location/useLocation";
-import Inputbox from "../../Input/Inputbox";
-import AutoL from "../../AutoLocationDetor/AutoL";
+import useTheme from "../../../../Context/Theme/ThemeContext";
+import useLocation from "../../../../Context/Location/useLocation";
+import Inputbox from "../../../ui/Inputbox";
+import AutoL from "../AutoLocationDetor/AutoL";
+import CurrAdress from "../CurrentAdress/CurrAdress";
+
 
 const LocationSelector = () => {
   const theme = useTheme((state) => state.theme);
@@ -14,7 +16,7 @@ const LocationSelector = () => {
         theme === "dark" ? "bg-[#1E293B]" : "bg-[#F8FAFC]"
       }  px-4 py-4 flex flex-col `}
     >
-      <div className="">
+      <div className="flex flex-col gap-2">
         <div className="upperSeaction flex justify-between items-center">
           <button
             className={`h-10 w-10 ${theme == "dark" ? "text-[#F1F5F9]" : "text-[#0F172A]"} `}
@@ -41,7 +43,7 @@ const LocationSelector = () => {
             Select Your Location
           </p>
         </div>
-        <div className="location">
+        <div className="location flex flex-col gap-2">
           <div className="manual">
             <Inputbox placeholderText={"Enter your location"} />
           </div>
@@ -49,6 +51,7 @@ const LocationSelector = () => {
             <AutoL />
           </div>
         </div>
+        <CurrAdress/>
       </div>
     </div>
   );

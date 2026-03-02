@@ -1,10 +1,21 @@
 import React from "react";
-import useTheme from "../../../Context/Theme/ThemeContext";
+import useTheme from "../../../../Context/Theme/ThemeContext";
+import useLogin from "../../../../Context/Login/useLogin";
+import LoginPop from "../../../features/login/LoginPop";
 
 const DescktopMenu = () => {
-    const theme = useTheme((state) => state.theme);
+  const toggleLogin = useLogin((state) => state.toggleLogin);
+  const theme = useTheme((state) => state.theme);
+  const handleClick = () => {
+    console.log("clicked");
+    toggleLogin();
+  };
   return (
-    <div className={`hidden lg:flex text-xl gap-1 items-center ${theme == "dark" ? "text-[#F1F5F9]" : "text-[#0F172A]"} cursor-pointer`}>
+    <>
+    <div
+      className={`hidden lg:flex text-xl gap-1 items-center ${theme == "dark" ? "text-[#F1F5F9]" : "text-[#0F172A]"} cursor-pointer `}
+      onClick={handleClick}
+    >
       Account{" "}
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -21,6 +32,8 @@ const DescktopMenu = () => {
         />
       </svg>
     </div>
+    <LoginPop/>
+    </>
   );
 };
 

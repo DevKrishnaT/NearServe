@@ -1,7 +1,11 @@
 import React from "react";
-import useMenu from "../../Context/Menu/MenuContext";
-import useTheme from "../../Context/Theme/ThemeContext";
+
+
+import useMenu from "../../../Context/Menu/MenuContext";
+import useTheme from "../../../Context/Theme/ThemeContext";
 import ToggleMenu from "./ToggleMenu";
+import Accout from "./Accout";
+
 
 const Menu = () => {
   const isSidebarOpen = useMenu((state) => state.isSidebarOpen);
@@ -55,8 +59,10 @@ const Menu = () => {
               )}
               {theme}
             </button>
+           
           
         </div>
+         <Accout/>
       </div>
     </div>
   );

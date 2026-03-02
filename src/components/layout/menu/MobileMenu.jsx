@@ -1,8 +1,8 @@
 
-import useTheme from "../../Context/Theme/ThemeContext";
+import useTheme from "../../../Context/Theme/ThemeContext";
 
 import Menu from "./menu";
-import useMenu from "../../Context/Menu/MenuContext";
+import useMenu from "../../../Context/Menu/MenuContext";
 
 const MobileMenu = () => {
   const theme = useTheme((state) => state.theme);

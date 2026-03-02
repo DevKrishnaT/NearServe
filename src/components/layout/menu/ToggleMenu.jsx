@@ -1,7 +1,8 @@
 import React from "react";
+import useMenu from "../../../Context/Menu/MenuContext";
+import useTheme from "../../../Context/Theme/ThemeContext";
 
-import useMenu from "../../Context/Menu/MenuContext";
-import useTheme from "../../Context/Theme/ThemeContext";
+
 const ToggleMenu = () => {
   const toggleMenu = useMenu((state) => state.toggleMenu);
   const theme = useTheme((state) => state.theme);

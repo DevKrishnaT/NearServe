@@ -1,7 +1,8 @@
 import React from "react";
-import useTheme from "../../Context/Theme/ThemeContext";
-import useLocation from "../../Context/Location/useLocation";
+
 import LocationSelector from "./isOpen/locationSelector";
+import useTheme from "../../../Context/Theme/ThemeContext";
+import useLocation from "../../../Context/Location/useLocation";
 
 const Headerlocation = () => {
   const theme = useTheme((state) => state.theme);
