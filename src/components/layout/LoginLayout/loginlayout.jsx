@@ -7,7 +7,7 @@ import useTheme from '../../../Context/Theme/ThemeContext'
 const Loginlayout = () => {
     const theme = useTheme((state) => (state.theme));
   return (
-    <>
+    <div className="flex flex-col gap-4 py-10">
      <div className="top flex flex-col w-full items-center gap-2">
         <div>
             <HeaderLogo />
@@ -25,11 +25,12 @@ const Loginlayout = () => {
         </p>
         </div>
       </div>
-      <div>
+      <div className='flex flex-col gap-6'>
         <Inputnumber numPlaceholder={"Enter Your Number"} />
+        <MainButton/>
       </div>
-      <MainButton/>
-      </>
+      
+    </div>
   )
 }
 
