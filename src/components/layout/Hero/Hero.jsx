@@ -32,8 +32,8 @@ const Hero = () => {
           </div>
 
          
-          <div className="flex flex-col  justify-between h-full  py-2 pr-100">
-            <h1 className="text-3xl font-bold drop-shadow-2xl  text-white px-1">Expert Electrician</h1>
+          <div className="flex flex-col  justify-end h-full  w-full  items-center py-3">
+          
             <RoundedButton buttonText={"Search For Plumber"} />
           </div>
         </div>
