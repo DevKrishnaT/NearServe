@@ -25,7 +25,7 @@ const ServicesSection = () => {
         Explore Services
       </span>
 
-      <div className="flex gap-4 overflow-x-auto scrollbar-hide">
+      <div className="flex gap-4 overflow-x-auto ">
         <div className="min-w-[45%] sm:min-w-[30%] md:min-w-[22%] lg:min-w-[18%]">
           <Cradslayout img={plumber} title="Plumber" />
         </div>
