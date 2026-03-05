@@ -1,6 +1,7 @@
 import React from "react";
 import useTheme from "../../../Context/Theme/ThemeContext";
 import electrician from "../../../assets/Electrician.png";
+import mobile from "../../../assets/nearServe_mobile_logo.png"
 import RoundedButton from "../../ui/button/RoundedButton";
 import HeroCard from "./heroCard/heroCard";
 
@@ -10,15 +11,21 @@ const Hero = () => {
   return (
     <>
       <div
-        className={`relative m-4 h-[55vh] lg:h-[70vh] rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.25)] ${
+        className={`relative  m-4 h-[20vh] lg:h-[70vh] lg:flex  lg:relative rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.25)] ${
           theme === "dark" ? "bg-[#1E293B]" : "bg-[#F8FAFC]"
         }`}
       >
+       <picture>
+      
+        <source media="(min-width: 1024px)" srcSet={electrician} />
+
+        
         <img
-          src={electrician}
-          alt="Electrician service"
-          className="absolute inset-0 w-full h-full object-cover object-[85%_center] lg:object-[center_10%]"
+          src={mobile}
+          alt="Service poster"
+          className="absolute inset-0 w-full h-full object-cover object-[center_-1%] lg:object-[center_10%] lg:scale-100"
         />
+      </picture>
 
       
         <div className="relative z-10 h-full w-full flex items-center justify-between px-6">
@@ -32,10 +39,7 @@ const Hero = () => {
           </div>
 
          
-          <div className="flex flex-col  justify-end h-full  w-full  items-center py-3">
-          
-            <RoundedButton buttonText={"Search For Plumber"} />
-          </div>
+         
         </div>
       </div>    
     </>
