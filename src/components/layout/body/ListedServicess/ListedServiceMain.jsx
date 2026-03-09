@@ -16,7 +16,7 @@ const ListedServiceMain = () => {
         </span>
       </div>
       <div
-        className={`grid grid-cols-1 mx-6 my-4  gap-4 lg:grid-cols-4  ${isdark ? "bg-[#0F172A]" : "bg-[#FFFFFF]"}`}
+        className={`grid grid-cols-1 mx-6 py-4  gap-4 lg:grid-cols-4  ${isdark ? "bg-[#0F172A]" : "bg-[#FFFFFF]"}`}
       >
         
           <ServiceCard

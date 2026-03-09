@@ -7,7 +7,7 @@ const ServiceCard = ({title , discription , rating }) => {
   const isdark = theme == "dark";
   return (
     <div
-      className={`${isdark ? "bg-[#1E293B]" : "bg-[#F8FAFC]"} rounded-2xl  flex flex-col  border`}
+      className={`${isdark ? "bg-[#1E293B]" : "bg-[#F8FAFC]"} rounded-2xl  flex flex-col  `}
     >
       <div className="img">
         <img src={img} alt="" className=" w-full object-cover rounded-t-2xl" />
