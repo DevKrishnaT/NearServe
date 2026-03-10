@@ -53,3 +53,17 @@
 .liDark {
   @apply hover:text-white transition-colors;
 }
+
+.primaryTextLight{
+@apply text-[#0F172A]
+}
+.primaryTextDark{
+@apply text-[#F1F5F9]
+}
+
+.bgLight{
+  @apply bg-white
+}
+.bgDark{
+  @apply bg-[#0F172A]
+}
