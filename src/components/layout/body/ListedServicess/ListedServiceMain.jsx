@@ -18,23 +18,33 @@ const ListedServiceMain = () => {
       <div
         className={`grid grid-cols-1 mx-6 py-4  gap-4 md:grid-cols-2   lg:grid-cols-4  ${isdark ? "bg-[#0F172A]" : "bg-[#FFFFFF]"}`}
       >
-        
-          <ServiceCard
-            title="home cleaning"
-            discription="Professional deep home cleaning services"
-            rating="4.5"
-          />
-          <ServiceCard
-            title="Ac service"
-            discription="Professional AC servicing with free gas check"
-            rating="4.5"
-          />
-          <ServiceCard
-            title="Electrition"
-            discription="Certified electricians for all your electrical needs"
-            rating="4.9"
-          />
-        
+        <ServiceCard
+          title="home cleaning"
+          discription="Professional deep home cleaning services"
+          provider="Rajesh Clener"
+          distance="5.3"
+          price="199"
+          eta="1 hr"
+          verified={true}
+        />
+        <ServiceCard
+          title="AC Repair"
+          discription="Professional home AC repair service"
+          provider="CoolFix Services"
+          distance="1.3"
+          price="299"
+          eta="45 min"
+          verified={true}
+        />
+        <ServiceCard
+          title="Electrition"
+          discription="Certified electricians for all your electrical needs"
+          provider="Raju Electrition"
+          distance="10.3"
+          price="399"
+          eta="3 hrs"
+          verified={false}
+        />
       </div>
     </div>
   );
