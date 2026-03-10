@@ -9,7 +9,7 @@ const Hero = () => {
 
   return (
     <div
-      className={`relative m-4 min-h-[40vh] lg:min-h-[70vh] lg:flex rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.25)] ${
+      className={`relative m-4 min-h-[20vh] md:min-h-[40vh]  lg:min-h-[70vh] lg:flex rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.25)] ${
         theme === "dark" ? "bg-[#1E293B]" : "bg-[#F8FAFC]"
       }`}
     >
