@@ -44,3 +44,12 @@
 #root {
  height: 100vh;
 }
+
+
+.liLight {
+  @apply hover:text-[#296dda] transition-colors;
+}
+
+.liDark {
+  @apply hover:text-white transition-colors;
+}
