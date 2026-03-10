@@ -17,7 +17,39 @@
     font-family: "ProximaNova", sans-serif;
   }
 }
+/* Chrome, Edge, Safari */
+.custom-scrollbar::-webkit-scrollbar {
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 9999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Firefox */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #94a3b8 transparent;
+}
 
 #root {
  height: 100vh;
+}
+
+
+.liLight {
+  @apply hover:text-[#296dda] transition-colors;
+}
+
+.liDark {
+  @apply hover:text-white transition-colors;
 }

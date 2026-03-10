@@ -10,6 +10,7 @@ import AnimatedPlaceHolder from "../../ui/AnimatedPlaceHolder";
 
 const Header = () => {
   const theme = useTheme((state) => state.theme);
+  
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -38,7 +39,7 @@ const Header = () => {
       </div>
 
       <div className="row2 mx-3 lg:w-full relative">
-        <Inputbox />
+        <Inputbox  />
 
         <div
           className={`absolute top-2 lg:top-3 left-3 flex gap-1 z-10 pointer-events-none ${
