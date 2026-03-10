@@ -18,7 +18,7 @@ const ServiceCard = ({
     <div
       className={`
       ${isDark ? "bg-[#1E293B] text-[#F1F5F9]" : "bg-[#F8FAFC] text-[#0F172A]"}
-      rounded-2xl overflow-hidden
+      rounded-2xl overflow-hidden drop-shadow-2xl 
        border-[#E2E8F0] dark:border-[#334155]
       hover:shadow-lg transition duration-200
       flex flex-col
