@@ -23,7 +23,7 @@ const AutoL = () => {
       (position) => {
         const { latitude, longitude } = position.coords;
 
-        setUserLocation({ latitude, longitude }); // save to global state
+        setUserLocation({ latitude, longitude }); 
 
         setLoading(false);
       },
