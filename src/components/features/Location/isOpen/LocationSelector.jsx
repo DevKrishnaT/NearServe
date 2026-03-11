@@ -11,11 +11,15 @@ const LocationSelector = () => {
   const islocationOpen = useLocation((state) => state.islocationOpen);
   const togglelocationbar = useLocation((state) => state.togglelocationbar);
   return (
+    <>
+      <div className={`${islocationOpen ? "fixed inset-0" : "hidden"} z-50 bg-black/40`}>
+      </div>
     <div
       className={`${islocationOpen ? "fixed inset-0" : "hidden"} z-50 ${
         theme === "dark" ? "bg-[#1E293B]" : "bg-[#F8FAFC]"
-      }  px-4 py-4 flex flex-col `}
+      }  px-4 py-4 flex flex-col lg:w-120  lg:h-90 lg:top-24 lg:left-25`}
     >
+      
       <div className="flex flex-col gap-2">
         <div className="upperSeaction flex justify-between items-center">
           <button
@@ -53,7 +57,10 @@ const LocationSelector = () => {
         </div>
         <CurrAdress/>
       </div>
+    
+      
     </div>
+    </>
   );
 };
 
