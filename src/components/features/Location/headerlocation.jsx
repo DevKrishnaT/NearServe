@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import LocationSelector from "./isOpen/locationSelector";
+import LocationSelector  from "./isOpen/LocationSelector";
 import useTheme from "../../../Context/Theme/ThemeContext";
 import useLocation from "../../../Context/Location/useLocation";
 import useLocationState from "../../../Context/Location/useRealLocation";
