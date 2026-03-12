@@ -1,48 +1,42 @@
 import React, { useState } from "react";
 import useTheme from "../../../../Context/Theme/ThemeContext";
+
+import { DetectLocation } from "../../../../Context/Location/detectLocation";
+import useLocationState from "../../../../Context/Location/useRealLocation";
 import useLocation from "../../../../Context/Location/useLocation";
 
 
 const AutoL = () => {
   const theme = useTheme((state) => state.theme);
-  const setUserLocation = useLocation((state) => state.setUserLocation);
+  const setUserLocation = useLocationState((state) => state.setUserLocation);
+  const togglelocationbar = useLocation((state) => state.togglelocationbar);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const detectLocation = () => {
-    if (!navigator.geolocation) {
-      setError("Geolocation not supported");
-      return;
+  
+    const handleDetectLocation = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const location = await DetectLocation();
+
+      setUserLocation(location); 
+      togglelocationbar();
+
+    } catch (err) {
+        setError(err.message || "Failed to detect location");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(true);
-    setError(null);
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-
-        setUserLocation({ latitude, longitude }); 
-
-        setLoading(false);
-      },
-      (err) => {
-        setError(err.message);
-        setLoading(false);
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 0,
-      },
-    );
   };
+
 
   return (
     <div className="flex flex-col items-start gap-2">
       <button
-        onClick={detectLocation}
+        onClick={handleDetectLocation}
         className={`flex py-2 rounded-md font-semibold transition gap-1 items-center ${
           theme === "dark"
             ? " text-[#F1F5F9]"

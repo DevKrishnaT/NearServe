@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-const useLocation = create((set) => ({
+const useLocationState = create((set) => ({
   location: null,
 
   setUserLocation: (location) => {
@@ -17,4 +17,4 @@ const useLocation = create((set) => ({
   },
 }));
 
-export default useLocation;
+export default useLocationState;
