@@ -2,6 +2,8 @@ import {create} from "zustand";
 
 const useLogin = create((set) => ({
     isLoginOpen : false,
-    toggleLogin : () => set((state) => ({isLoginOpen: !state.isLoginOpen}))
+    openLogin: () => set({ isLoginOpen: true }),
+
+  closeLogin: () => set({ isLoginOpen: false })
 }));
 export default useLogin;
