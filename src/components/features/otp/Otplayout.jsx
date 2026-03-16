@@ -27,30 +27,27 @@ const OtpLayout = () => {
 
   }, []);
 
-  const verifyOtp = () => {
+ const verifyOtp = async () => {
+  const code = otp.join("");
 
-    const code = otp.join("");
+  if (code.length !== 6) {
+    alert("Enter valid OTP");
+    return;
+  }
 
-    if (code.length !== 6) {
-      alert("Enter valid OTP");
-      return;
-    }
-
+  try {
     console.log("Verify OTP:", code);
-  };
 
-  const resendOtp = () => {
+    const result = await window.confirmationResult.confirm(code);
 
-    if (resendCount >= MAX_RESEND) {
-      alert("Too many resend attempts");
-      return;
-    }
+    console.log("User logged in:", result.user);
 
-    increaseResend();
-    startTimer();
+  } catch (error) {
+    console.error("OTP verification failed:", error);
+    alert("Invalid OTP");
+  }
+};
 
-    console.log("OTP resent");
-  };
 
   return (
 

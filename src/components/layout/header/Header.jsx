@@ -10,15 +10,7 @@ import AnimatedPlaceHolder from "../../ui/AnimatedPlaceHolder";
 
 const Header = () => {
   const theme = useTheme((state) => state.theme);
-  
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % services.length);
-    }, 2000);
-
-    return () => clearInterval(interval);
-  }, []);
+ 
 
   return (
     <div

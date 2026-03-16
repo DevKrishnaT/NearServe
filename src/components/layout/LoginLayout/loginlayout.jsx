@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import HeaderLogo from "../../ui/headerLogo";
 import Inputnumber from "../../ui/Inputnumber";
 import MainButton from "../../ui/button/mainButton";
@@ -15,51 +15,97 @@ const Loginlayout = () => {
   const openOtpPage = useOtpPage((state) => state.openOtpPage);
   const closeLogin = useLogin((state) => state.closeLogin);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const verifierRef = useRef(null);      // holds the RecaptchaVerifier instance
+  const isRendered = useRef(false);      // tracks if recaptcha is already rendered
 
-  const setupRecaptcha = () => {
-    if (!window.recaptchaVerifier) {
-      window.recaptchaVerifier = new RecaptchaVerifier(
-        auth,
-        "recaptcha-container",
-        {
-          size: "invisible",
-        },
-      );
+  // Create verifier ONCE on mount
+  useEffect(() => {
+    initVerifier();
+    return () => {
+      destroyVerifier();
+    };
+  }, []);
+
+  const destroyVerifier = () => {
+    if (verifierRef.current) {
+      try { verifierRef.current.clear(); } catch (_) { }
+      verifierRef.current = null;
     }
+    isRendered.current = false;
+    // Wipe the DOM container so Google's script sees a clean element
+    const el = document.getElementById("recaptcha-container");
+    if (el) el.innerHTML = "";
   };
-  const handleSubmit = async () => {
-    const res = validation(phoneNo);
 
+  const initVerifier = () => {
+    destroyVerifier(); // always clean before creating
+
+    verifierRef.current = new RecaptchaVerifier(
+      auth,
+      "recaptcha-container",
+      { size: "invisible" }
+    );
+
+    // render once and mark it done
+    verifierRef.current.render().then(() => {
+      isRendered.current = true;
+    }).catch(() => {
+      // render error — will retry on submit
+      isRendered.current = false;
+    });
+  };
+
+  const handleSubmit = async () => {
+    if (loading) return;
+
+    const res = validation(phoneNo);
     if (!res) {
       setError("Enter valid Phone number");
       return;
     }
 
-    try {
-      setupRecaptcha();
+    setLoading(true);
+    setError(null);
 
-      const appVerifier = window.recaptchaVerifier;
+    try {
+      // If verifier got into a bad state, reinit before calling signIn
+      if (!verifierRef.current) {
+        initVerifier();
+        // small wait for render
+        await new Promise((r) => setTimeout(r, 500));
+      }
 
       const phoneNumber = "+91" + phoneNo;
-
       window.lastPhoneNumber = phoneNumber;
+      await verifierRef.current.verify();
 
       const confirmationResult = await signInWithPhoneNumber(
         auth,
         phoneNumber,
-        appVerifier,
+        verifierRef.current
       );
 
       window.confirmationResult = confirmationResult;
-
-      window.signInWithPhoneNumberFn = (phone, verifier) =>
-        signInWithPhoneNumber(auth, phone, verifier);
-
       openOtpPage();
       closeLogin();
-    } catch (error) {
-      console.error(error);
-      setError("Failed to send OTP");
+    } catch (err) {
+      console.error("OTP Error:", err.code, err.message);
+
+      if (err.code === "auth/invalid-app-credential") {
+        setError("reCAPTCHA config issue. Please wait a moment and retry.");
+      } else if (err.code === "auth/too-many-requests") {
+        setError("Too many attempts. Please try after some time.");
+      } else if (err.code === "auth/billing-not-enabled") {
+        setError("Service unavailable. Contact support.");
+      } else {
+        setError("Failed to send OTP. Please try again.");
+      }
+
+      // Always reinit verifier after a failure so next attempt works
+      initVerifier();
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -71,12 +117,14 @@ const Loginlayout = () => {
         </div>
         <div className="flex flex-col items-center">
           <h1
-            className={`${theme === "dark" ? "text-[#F1F5F9]" : "text-[#0F172A]"} text-xl font-bold `}
+            className={`${theme === "dark" ? "text-[#F1F5F9]" : "text-[#0F172A]"
+              } text-xl font-bold`}
           >
             Start Finding Services
           </h1>
           <p
-            className={`capitalize ${theme === "dark" ? "text-[#F1F5F9]" : "text-[#0F172A]"}`}
+            className={`capitalize ${theme === "dark" ? "text-[#F1F5F9]" : "text-[#0F172A]"
+              }`}
           >
             Login / Signup
           </p>
@@ -97,7 +145,15 @@ const Loginlayout = () => {
             error={error}
           />
         </div>
-        <MainButton onClick={handleSubmit} text="Send OTP" />
+
+        {/* Must stay in DOM — Firebase renders reCAPTCHA here */}
+        <div id="recaptcha-container"></div>
+
+        <MainButton
+          onClick={handleSubmit}
+          text={loading ? "Sending..." : "Send OTP"}
+          disabled={loading}
+        />
       </div>
     </div>
   );

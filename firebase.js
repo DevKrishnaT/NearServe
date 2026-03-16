@@ -1,22 +1,16 @@
-// Import the functions you need from the SDKs you need
 import { getApp, getApps, initializeApp } from "firebase/app";
-
-import {getAuth} from "firebase/auth";
+import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDgItOcd6bgG0vGwT69InDvelxWsZdCfKM",
-  authDomain: "nearserve-9b313.firebaseapp.com",
-  projectId: "nearserve-9b313",
-  storageBucket: "nearserve-9b313.firebasestorage.app",
-  messagingSenderId: "901450894017",
-  appId: "1:901450894017:web:3c912c5611af46af576240",
-  measurementId: "G-V5T94J1BSV"
+  apiKey: "AIzaSyAYU06p3B6xZKiW3lahUE8I0tcektPyKdo",
+  authDomain: "nearserve-78d77.firebaseapp.com",
+  projectId: "nearserve-78d77",
+  storageBucket: "nearserve-78d77.firebasestorage.app",
+  messagingSenderId: "73484149819",
+  appId: "1:73484149819:web:9a8c9a94d8ef10a2e2a81e"
 };
 
-// Initialize Firebase
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
-const auth = getAuth(app);
+const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+
+export const auth = getAuth(app);
 auth.useDeviceLanguage();
-
-
-export {auth};

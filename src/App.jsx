@@ -37,7 +37,7 @@ const App = () => {
       <div
         className={`${theme == "dark" ? "bg-[#0F172A]" : "bg-white"} h-full`}
       >
-         <div id="recaptcha-container"></div>
+       <div id="recaptcha-container"></div>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />

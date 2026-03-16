@@ -14,8 +14,15 @@ const OtpLayout = () => {
   const [loading, setLoading] = useState(false);
 
   const verifyOtp = async () => {
-    console.log("verify button clicked");
+    console.log("confirmationResult:", window.confirmationResult);
+console.log("OTP entered:", code);
+
     const code = otp.join("");
+
+    if (!window.confirmationResult) {
+      setError("Session expired. Please request OTP again.");
+      return;
+    }
 
     if (code.length !== 6) {
       setError("Enter valid OTP");
@@ -29,12 +36,11 @@ const OtpLayout = () => {
 
       console.log("User logged in:", result.user);
 
-      setLoading(false);
-
       closeOtpPage();
     } catch (err) {
       console.error(err);
       setError("Invalid OTP");
+    } finally {
       setLoading(false);
     }
   };
