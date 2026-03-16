@@ -2,7 +2,7 @@ import React from "react";
 import useTheme from "../../../../Context/Theme/ThemeContext";
 import useLogin from "../../../../Context/Login/useLogin";
 import LoginPop from "../../../features/login/LoginPop";
-import OtpPop from "../../../features/login/otpPop";
+import OtpPop from "../../../features/login/OtpPop";
 
 const DesktopMenu = () => {
 
@@ -16,9 +16,8 @@ const DesktopMenu = () => {
   return (
     <>
       <div
-        className={`hidden lg:flex text-xl gap-1 items-center ${
-          theme === "dark" ? "text-[#F1F5F9]" : "text-[#0F172A]"
-        } cursor-pointer`}
+        className={`hidden lg:flex text-xl gap-1 items-center ${theme === "dark" ? "text-[#F1F5F9]" : "text-[#0F172A]"
+          } cursor-pointer`}
         onClick={handleClick}
       >
         Account
