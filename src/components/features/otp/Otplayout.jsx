@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import OTPInput from "./OTPInput";
 import useOtpStore from "../../../store/useOtpStore";
+import MainButton from "../../ui/button/mainButton";
 
-const MAX_RESEND = 3;
-
-const OtpLayout = () => {
+export default function OtpLayout({ onBack, onResend, closeLogin }) {
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const {
     otp,
@@ -14,75 +15,107 @@ const OtpLayout = () => {
     canResend,
     resendCount,
     startTimer,
-    increaseResend
+    increaseResend,
   } = useOtpStore();
 
   useEffect(() => {
-
-    const interval = setInterval(() => {
-      tick();
-    }, 1000);
-
+    const interval = setInterval(() => tick(), 1000);
     return () => clearInterval(interval);
-
   }, []);
 
- const verifyOtp = async () => {
-  const code = otp.join("");
+  const verifyOtp = async () => {
+    const code = otp.join("");
 
-  if (code.length !== 6) {
-    alert("Enter valid OTP");
-    return;
-  }
+    if (code.length !== 6) {
+      setError("Please enter a valid 6-digit OTP.");
+      return;
+    }
 
-  try {
-    console.log("Verify OTP:", code);
+    if (!window.confirmationResult) {
+      setError("Session expired. Please request a new OTP.");
+      return;
+    }
 
-    const result = await window.confirmationResult.confirm(code);
+    setLoading(true);
+    setError(null);
 
-    console.log("User logged in:", result.user);
+    try {
+      const result = await window.confirmationResult.confirm(code);
+      console.log("User logged in:", result.user);
+      closeLogin();
+    } catch (err) {
+      if (err.code === "auth/invalid-verification-code") {
+        setError("Incorrect OTP. Please try again.");
+      } else if (err.code === "auth/code-expired") {
+        setError("OTP expired. Please resend.");
+      } else {
+        setError("Verification failed. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  } catch (error) {
-    console.error("OTP verification failed:", error);
-    alert("Invalid OTP");
-  }
-};
+  const resendOtp = async () => {
+    if (resendCount >= MAX_RESEND) {
+      setError("Maximum resend limit reached. Please try again later.");
+      return;
+    }
 
+    setError(null);
+
+    try {
+      await onResend();
+      increaseResend();
+      startTimer();
+    } catch (err) {
+      console.error("Resend error:", err.code, err.message);
+      if (err.code === "auth/too-many-requests") {
+        setError("Too many attempts. Please try later.");
+      } else if (err.code === "auth/invalid-app-credential") {
+        setError("reCAPTCHA expired. Please go back and retry.");
+      } else {
+        setError("Failed to resend OTP. Please try again.");
+      }
+    }
+  };
+
+  const attemptsLeft = MAX_RESEND - resendCount;
 
   return (
-
     <div className="flex flex-col gap-6 p-6">
-
-      <h2 className="text-xl font-bold text-center">
-        Enter 6 digit OTP
-      </h2>
+      <ToggleButton toggle={onBack} />
+      <h2 className="text-xl font-bold text-center">Enter 6 digit OTP</h2>
 
       <OTPInput otp={otp} setOtp={setOtp} />
 
-      <button
+      {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+
+      <MainButton
         onClick={verifyOtp}
-        className="bg-blue-600 text-white h-10 rounded-lg"
-      >
-        Verify OTP
-      </button>
+        text={loading ? "Verifying..." : "Verify OTP"}
+        disabled={loading}
+      />
 
       <div className="text-center text-sm">
-
         {!canResend ? (
-          <p>Resend OTP in {timer}s</p>
+          <p className="text-gray-500">Resend OTP in {timer}s</p>
+        ) : resendCount >= MAX_RESEND ? (
+          <p className="text-red-400">Maximum resend attempts reached.</p>
         ) : (
-          <button
-            onClick={resendOtp}
-            className="text-blue-600"
-          >
-            Resend OTP
-          </button>
+          <div className="flex flex-col items-center gap-1">
+            <button
+              onClick={resendOtp}
+              className="text-blue-600 hover:underline"
+            >
+              Resend OTP
+            </button>
+            <p className="text-gray-400 text-xs">
+              {attemptsLeft} attempt{attemptsLeft !== 1 ? "s" : ""} remaining
+            </p>
+          </div>
         )}
-
       </div>
-
     </div>
   );
-};
-
-export default OtpLayout;
+}
