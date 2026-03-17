@@ -17,9 +17,9 @@ const Loginlayout = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const verifierRef = useRef(null);
+  const recaptchaContainerRef = useRef(null);
 
   useEffect(() => {
-    setupVerifier();
     return () => clearVerifier();
   }, []);
 
@@ -30,21 +30,28 @@ const Loginlayout = () => {
       } catch (_) {}
       verifierRef.current = null;
     }
-    const el = document.getElementById("recaptcha-container");
-    if (el) el.innerHTML = "";
   };
 
-  const setupVerifier = () => {
+  const setupVerifier = async () => {
     clearVerifier();
-    verifierRef.current = new RecaptchaVerifier(auth, "recaptcha-container", {
-      size: "invisible",
-      callback: () => {},
-      "expired-callback": () => {
-        clearVerifier();
-        setupVerifier();
+
+    if (!recaptchaContainerRef.current) {
+      throw new Error("reCAPTCHA container not ready");
+    }
+
+    verifierRef.current = new RecaptchaVerifier(
+      recaptchaContainerRef.current,
+      {
+        size: "invisible",
+        callback: () => {},
+        "expired-callback": () => {
+          clearVerifier();
+        },
       },
-    });
-    verifierRef.current.render().catch(() => clearVerifier());
+      auth
+    );
+
+    await verifierRef.current.render();
   };
 
   const handleSubmit = async () => {
@@ -56,67 +63,60 @@ const Loginlayout = () => {
       return;
     }
 
-    if (!verifierRef.current) {
-      setupVerifier();
-      await new Promise((r) => setTimeout(r, 800));
-    }
-
     setLoading(true);
     setError(null);
 
     try {
+      await setupVerifier();
+
       const phoneNumber = "+91" + phoneNo;
       window.lastPhoneNumber = phoneNumber;
 
       const confirmationResult = await signInWithPhoneNumber(
         auth,
         phoneNumber,
-        verifierRef.current,
+        verifierRef.current
       );
 
       window.confirmationResult = confirmationResult;
       setOtpPage(true);
     } catch (err) {
-      console.error("OTP Error:", err.code, err.message);
-      clearVerifier();
-      setupVerifier();
-
-      if (err.code === "auth/invalid-app-credential") {
-        setError("reCAPTCHA expired. Please try again.");
-      } else if (err.code === "auth/too-many-requests") {
-        setError("Daily limit reached. Try later.");
-      } else if (err.code === "auth/billing-not-enabled") {
-        setError("Service unavailable.");
-      } else if (err.code === "auth/invalid-phone-number") {
-        setError("Invalid phone number format.");
-      } else {
-        setError("Failed to send OTP. Please try again.");
-      }
+      console.error(err);
+      await setupVerifier();
+      setError("Failed to send OTP.");
     } finally {
       setLoading(false);
     }
   };
 
   const handleResend = async () => {
-    if (!verifierRef.current) {
-      setupVerifier();
-      await new Promise((r) => setTimeout(r, 800));
+    try {
+      await setupVerifier();
+
+      const confirmationResult = await signInWithPhoneNumber(
+        auth,
+        window.lastPhoneNumber,
+        verifierRef.current
+      );
+
+      window.confirmationResult = confirmationResult;
+    } catch (err) {
+      console.error("Resend error:", err);
+      await setupVerifier();
+
+      if (err.code === "auth/too-many-requests") {
+        setError("Too many attempts. Try later.");
+      } else {
+        setError("Failed to resend OTP.");
+      }
     }
-
-    const confirmationResult = await signInWithPhoneNumber(
-      auth,
-      window.lastPhoneNumber,
-      verifierRef.current,
-    );
-
-    window.confirmationResult = confirmationResult;
   };
 
   const isDark = theme === "dark";
 
   return (
     <div className="flex flex-col gap-4 py-10">
-      <div id="recaptcha-container" />
+      <div ref={recaptchaContainerRef} />
 
       {otpPage ? (
         <OtpLayout

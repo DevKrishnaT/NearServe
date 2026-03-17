@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import OTPInput from "./OTPInput";
 import useOtpStore from "../../../store/useOtpStore";
 import MainButton from "../../ui/button/mainButton";
+import ToggleButton from "../../ui/toggleButton";
 
 export default function OtpLayout({ onBack, onResend, closeLogin }) {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-
+  const MAX_RESEND = 3;
   const {
     otp,
     setOtp,
