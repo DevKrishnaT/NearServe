@@ -3,7 +3,7 @@ import { create } from "zustand";
 const useOtpStore = create((set) => ({
   otp: Array(6).fill(""),
   loading: false,
-  timer: 60,
+  timer: 30,
   canResend: false,
   resendCount: 0,
 
@@ -11,7 +11,7 @@ const useOtpStore = create((set) => ({
 
   startTimer: () =>
     set({
-      timer: 60,
+      timer: 30,
       canResend: false
     }),
 

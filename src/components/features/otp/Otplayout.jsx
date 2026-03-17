@@ -4,7 +4,12 @@ import useOtpStore from "../../../store/useOtpStore";
 import MainButton from "../../ui/button/mainButton";
 import ToggleButton from "../../ui/toggleButton";
 
-export default function OtpLayout({ onBack, onResend, closeLogin }) {
+export default function OtpLayout({
+  onBack,
+  onResend,
+  closeLogin,
+  confirmationResult,
+}) {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const MAX_RESEND = 3;
@@ -32,7 +37,7 @@ export default function OtpLayout({ onBack, onResend, closeLogin }) {
       return;
     }
 
-    if (!window.confirmationResult) {
+    if (!confirmationResult) {
       setError("Session expired. Please request a new OTP.");
       return;
     }
@@ -41,7 +46,7 @@ export default function OtpLayout({ onBack, onResend, closeLogin }) {
     setError(null);
 
     try {
-      const result = await window.confirmationResult.confirm(code);
+      const result = await confirmationResult.confirm(code);
       console.log("User logged in:", result.user);
       closeLogin();
     } catch (err) {
@@ -70,7 +75,6 @@ export default function OtpLayout({ onBack, onResend, closeLogin }) {
       increaseResend();
       startTimer();
     } catch (err) {
-      console.error("Resend error:", err.code, err.message);
       if (err.code === "auth/too-many-requests") {
         setError("Too many attempts. Please try later.");
       } else if (err.code === "auth/invalid-app-credential") {

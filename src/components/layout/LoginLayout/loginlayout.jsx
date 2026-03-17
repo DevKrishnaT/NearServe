@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import HeaderLogo from "../../ui/headerLogo";
 import Inputnumber from "../../ui/Inputnumber";
 import MainButton from "../../ui/button/mainButton";
@@ -16,99 +16,76 @@ const Loginlayout = () => {
   const closeLogin = useLogin((state) => state.closeLogin);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [confirmationResult, setConfirmationResult] = useState(null);
+
   const verifierRef = useRef(null);
-  const recaptchaContainerRef = useRef(null);
+  const containerIdRef = useRef("recaptcha-container-0"); // ← unique ID tracker
 
-  useEffect(() => {
-    return () => clearVerifier();
-  }, []);
-
-  const clearVerifier = () => {
+  const getFreshVerifier = () => {
+    // 1. Destroy old verifier
     if (verifierRef.current) {
-      try {
-        verifierRef.current.clear();
-      } catch (_) {}
+      try { verifierRef.current.clear(); } catch (_) {}
       verifierRef.current = null;
     }
-  };
 
-  const setupVerifier = async () => {
-    clearVerifier();
+    // 2. Remove old container entirely from DOM
+    const oldContainer = document.getElementById(containerIdRef.current);
+    if (oldContainer) oldContainer.remove();
 
-    if (!recaptchaContainerRef.current) {
-      throw new Error("reCAPTCHA container not ready");
-    }
+    // 3. Create a brand new container with a new unique ID
+    const newId = `recaptcha-container-${Date.now()}`;
+    containerIdRef.current = newId;
 
-    verifierRef.current = new RecaptchaVerifier(
-      recaptchaContainerRef.current,
-      {
-        size: "invisible",
-        callback: () => {},
-        "expired-callback": () => {
-          clearVerifier();
-        },
+    const newContainer = document.createElement("div");
+    newContainer.id = newId;
+    document.getElementById("recaptcha-root").appendChild(newContainer);
+
+    // 4. Create fresh verifier on the new container
+    const verifier = new RecaptchaVerifier(auth, newId, {
+      size: "invisible",
+      "expired-callback": () => {
+        // Token expired silently — will recreate on next submit
+        if (verifierRef.current) {
+          try { verifierRef.current.clear(); } catch (_) {}
+          verifierRef.current = null;
+        }
       },
-      auth
-    );
+    });
 
-    await verifierRef.current.render();
+    verifierRef.current = verifier;
+    return verifier;
   };
 
   const handleSubmit = async () => {
-    if (loading) return;
-
-    const res = validation(phoneNo);
-    if (!res) {
-      setError("Enter valid Phone number");
+    const isValid = validation(phoneNo);
+    if (!isValid) {
+      setError("Invalid number");
       return;
     }
 
-    setLoading(true);
     setError(null);
+    setLoading(true);
+
+    const verifier = getFreshVerifier();
 
     try {
-      await setupVerifier();
-
-      const phoneNumber = "+91" + phoneNo;
-      window.lastPhoneNumber = phoneNumber;
-
-      const confirmationResult = await signInWithPhoneNumber(
-        auth,
-        phoneNumber,
-        verifierRef.current
-      );
-
-      window.confirmationResult = confirmationResult;
+      const result = await signInWithPhoneNumber(auth, `+91${phoneNo}`, verifier);
+      setConfirmationResult(result);
       setOtpPage(true);
     } catch (err) {
       console.error(err);
-      await setupVerifier();
-      setError("Failed to send OTP.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleResend = async () => {
-    try {
-      await setupVerifier();
-
-      const confirmationResult = await signInWithPhoneNumber(
-        auth,
-        window.lastPhoneNumber,
-        verifierRef.current
-      );
-
-      window.confirmationResult = confirmationResult;
-    } catch (err) {
-      console.error("Resend error:", err);
-      await setupVerifier();
+      try { verifierRef.current?.clear(); } catch (_) {}
+      verifierRef.current = null;
 
       if (err.code === "auth/too-many-requests") {
-        setError("Too many attempts. Try later.");
+        setError("Too many attempts. Please try later.");
+      } else if (err.code === "auth/invalid-app-credential") {
+        setError("reCAPTCHA failed. Please try again.");
       } else {
-        setError("Failed to resend OTP.");
+        setError("Failed to send OTP. Please try again.");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -116,27 +93,25 @@ const Loginlayout = () => {
 
   return (
     <div className="flex flex-col gap-4 py-10">
-      <div ref={recaptchaContainerRef} />
+      {/* Static root — dynamic containers get appended here */}
+      <div id="recaptcha-root" />
 
       {otpPage ? (
         <OtpLayout
           onBack={() => setOtpPage(false)}
-          onResend={handleResend}
+          onResend={handleSubmit}
           closeLogin={closeLogin}
+          confirmationResult={confirmationResult}
         />
       ) : (
         <>
           <div className="top flex flex-col w-full items-center gap-2">
             <HeaderLogo />
             <div className="flex flex-col items-center">
-              <h1
-                className={`text-xl font-bold ${isDark ? "text-[#F1F5F9]" : "text-[#0F172A]"}`}
-              >
+              <h1 className={`text-xl font-bold ${isDark ? "text-[#F1F5F9]" : "text-[#0F172A]"}`}>
                 Start Finding Services
               </h1>
-              <p
-                className={`capitalize ${isDark ? "text-[#F1F5F9]" : "text-[#0F172A]"}`}
-              >
+              <p className={`capitalize ${isDark ? "text-[#F1F5F9]" : "text-[#0F172A]"}`}>
                 Login / Signup
               </p>
             </div>
