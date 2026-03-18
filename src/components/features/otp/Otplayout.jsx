@@ -3,6 +3,8 @@ import OTPInput from "./OTPInput";
 import useOtpStore from "../../../store/useOtpStore";
 import MainButton from "../../ui/button/mainButton";
 import ToggleButton from "../../ui/toggleButton";
+import api from "../../../Context/api/api";
+import { log } from "firebase/firestore/pipelines";
 
 export default function OtpLayout({
   onBack,
@@ -25,9 +27,11 @@ export default function OtpLayout({
   } = useOtpStore();
 
   useEffect(() => {
-    const interval = setInterval(() => tick(), 1000);
+    if (!timer) return;
+
+    const interval = setInterval(tick, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [tick, timer]);
 
   const verifyOtp = async () => {
     const code = otp.join("");
@@ -47,12 +51,32 @@ export default function OtpLayout({
 
     try {
       const result = await confirmationResult.confirm(code);
-      console.log("User logged in:", result.user);
+      const user = result.user;
+   
+      
+
+      const token = await user.getIdToken();
+      
+      
+
+      await api.post(
+        "/user",
+        {
+          name: "user",
+          phoneNo: user.phoneNumber,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
       closeLogin();
     } catch (err) {
-      if (err.code === "auth/invalid-verification-code") {
+      if (err?.code === "auth/invalid-verification-code") {
         setError("Incorrect OTP. Please try again.");
-      } else if (err.code === "auth/code-expired") {
+      } else if (err?.code === "auth/code-expired") {
         setError("OTP expired. Please resend.");
       } else {
         setError("Verification failed. Please try again.");
