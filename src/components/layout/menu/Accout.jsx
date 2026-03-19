@@ -3,19 +3,25 @@ import useTheme from "../../../Context/Theme/ThemeContext";
 import useHandleLogin from "../../../Context/HadelLogin";
 import useAuthState from "../../../Context/useAuthState";
 import useLogin from "../../../Context/Login/useLogin";
+import useDashboard from "../../../Context/useDashboard";
 
 const Accout = () => {
    const openLogin = useLogin((state) => state.openLogin);
+     const openDashboard = useDashboard((state) => state.openDashboard);
   const theme = useTheme((state) => state.theme);
   const handleLogin =() =>{
-    openLogin();
+    if (!user) {
+      openLogin();
+    } else {
+      openDashboard();
+    }
   }
     const { user, loading } = useAuthState();
     if(loading){
       return <p className="px-2">loading...</p>
     }
   return (
-    <div className="flex h-full items-center px-2" onClick={!user ? handleLogin : undefined}>
+    <div className="flex h-full items-center px-2" onClick={ handleLogin }>
       <div
         className={`${theme === "dark" ? "text-[#F1F5F9]" : "text-[#0F172A]"} flex gap-4 `}
       >

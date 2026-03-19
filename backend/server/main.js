@@ -16,6 +16,7 @@ if (!admin.apps.length) {
 const allowedOrigins = [
   "http://localhost:5173",
   "https://near-serve-28yu.vercel.app",
+  "http://192.168.1.33:5173",
 ];
 const app = express();
 app.use(express.json());
@@ -57,6 +58,36 @@ app.post("/api/user", async (req, res) => {
     res.json({ message: "User created" });
   } catch (err) {
     res.status(401).json({ error: "Unauthorized" });
+  }
+});
+app.get("/api/user", async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1];
+
+    if (!token) {
+      return res.status(401).json({ error: "No token provided" });
+    }
+
+    const decoded = await admin.auth().verifyIdToken(token);
+    const uid = decoded.uid;
+
+    const [result] = await pool.query(
+      "SELECT * FROM users WHERE uid = ?",
+      [uid]
+    );
+
+    if (result.length === 0) {
+      return res.json({ message: "No user exists" });
+    }
+
+    return res.json({
+      message: "User found",
+      user: result[0],
+    });
+
+  } catch (error) {
+    console.error("ERROR:", error.message);
+    res.status(500).json({ error: error.message });
   }
 });
 
