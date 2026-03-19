@@ -20,7 +20,7 @@ const DesktopMenu = () => {
       <div
         className={`hidden lg:flex text-xl gap-1 items-center ${theme === "dark" ? "text-[#F1F5F9]" : "text-[#0F172A]"
           } cursor-pointer`}
-        onClick={!user ? handleLogin : undefined}
+        onClick={!user ? handleClick : undefined}
       >
 
         {!loading ? <>
