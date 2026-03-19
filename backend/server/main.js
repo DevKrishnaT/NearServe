@@ -6,18 +6,22 @@ import cors from "cors";
 import fs from "fs";
 
 const serviceAccount = JSON.parse(
-  fs.readFileSync("../serviceAccountKey/ServiceAccountKey.json", "utf-8")
+  fs.readFileSync("../serviceAccountKey/ServiceAccountKey.json", "utf-8"),
 );
 if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
   });
 }
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://near-serve-28yu.vercel.app",
+];
 const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: allowedOrigins,
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   }),
@@ -29,12 +33,19 @@ app.get("/", (req, res) => {
 app.post("/api/user", async (req, res) => {
   try {
     const token = req.headers.authorization?.split(" ")[1];
-    console.log("AUTH HEADER:", req.headers.authorization);
-    console.log("TOKEN:", token);
+
     const decoded = await admin.auth().verifyIdToken(token);
-    console.log("------------------", decoded);
 
     const uid = decoded.uid;
+
+    const [rows] = await pool.query("SELECT * FROM users WHERE uid = ?", [uid]);
+
+    if (rows.length > 0) {
+      return res.json({
+        message: "User already exists",
+        user: rows[0],
+      });
+    }
 
     const { name, phoneNo } = req.body;
 
@@ -49,14 +60,6 @@ app.post("/api/user", async (req, res) => {
   }
 });
 
-app.get("/api/users", async (req, res) => {
-  try {
-    const [rows] = await pool.query("SELECT * FROM users");
-    res.json(rows);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
 app.listen(4000, async () => {
   try {
     await pool.query("SELECT 1");
