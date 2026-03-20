@@ -11,7 +11,43 @@ const Dashboard = () => {
   const isDashboardOpen = useDashboard((state) => state.isDashboardOpen);
   const closeDashboard = useDashboard((state) => state.closeDashboard);
   const [DBuser, setDBuser] = useState("");
+  const [isEditing, setEditing] = useState(false);
+  const [changedName, setChangedName] = useState(null);
   const { user } = useAuthState();
+
+  const handelClick = () => {
+    setEditing(true);
+  };
+  const cancelChnage = () => {
+    setEditing(false);
+  };
+  const handleSubmit = async () => {
+    try {
+      if (!changedName?.trim()) return;
+
+      const token = await user.getIdToken();
+
+      await api.patch(
+        "/user",
+        { name: changedName },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      
+      setDBuser((prev) => ({
+        ...prev,
+        name: changedName,
+      }));
+
+      setEditing(false);
+    } catch (error) {
+      console.error("Update failed:", error);
+    }
+  };
 
   useEffect(() => {
     const fetchuser = async () => {
@@ -90,7 +126,65 @@ const Dashboard = () => {
           </div>
 
           <div className=" flex flex-col justify-center items-center">
-            <div className="text-xl font-semibold">{DBuser.name}</div>
+            <div className="flex">
+              {" "}
+              {isEditing ? (
+                <>
+                  <div className={`p-2 border rounded-xl flex`}>
+                    <input
+                      type="text"
+                      autoFocus
+                      enterKeyHint="done"
+                      className="focus:outline-0"
+                      onChange={(e) => setChangedName(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+                    />
+                    <div className="close text-red-500 " onClick={cancelChnage}>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="size-6"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M6 18 18 6M6 6l12 12"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <button
+                    className={`border rounded-2xl px-2 ml-1 bg-[#296dda] text-white `}
+                    onClick={handleSubmit}
+                  >
+                    Done
+                  </button>
+                </>
+              ) : (
+                <>
+                  <div className="text-xl font-semibold">{DBuser.name}</div>{" "}
+                  <div className="" onClick={handelClick}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="size-4"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+                      />
+                    </svg>
+                  </div>
+                </>
+              )}
+            </div>
             <div className="text-md">{DBuser.phoneNo}</div>
           </div>
         </div>

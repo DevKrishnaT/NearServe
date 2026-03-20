@@ -23,7 +23,7 @@ app.use(express.json());
 app.use(
   cors({
     origin: allowedOrigins,
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE" , "PATCH"],
     credentials: true,
   }),
 );
@@ -60,6 +60,36 @@ app.post("/api/user", async (req, res) => {
     res.status(401).json({ error: "Unauthorized" });
   }
 });
+
+app.patch("/api/user", async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ error: "No token provided" });
+    }
+    const { name } = req.body;
+    const decoded = await admin.auth().verifyIdToken(token);
+    const uid = decoded.uid;
+    const [result] = await pool.query("SELECT * FROM users WHERE uid = ?", [uid]);
+
+    if (result.length === 0) {
+      return res.status(404).json({ message: "user dint find" });
+    }
+
+    const [edit] = await pool.query("UPDATE users SET name = ? WHERE uid = ?", [
+      name,
+      uid,
+    ]);
+
+    if (edit.affectedRows === 0) {
+      return res.status(401).json({ message: " try again" });
+    } else {
+     return res.status(200).json({ message: "Updated successfully" });
+    }
+  } catch (error) {
+    console.error(error);
+  }
+});
 app.get("/api/user", async (req, res) => {
   try {
     const token = req.headers.authorization?.split(" ")[1];
@@ -71,10 +101,9 @@ app.get("/api/user", async (req, res) => {
     const decoded = await admin.auth().verifyIdToken(token);
     const uid = decoded.uid;
 
-    const [result] = await pool.query(
-      "SELECT * FROM users WHERE uid = ?",
-      [uid]
-    );
+    const [result] = await pool.query("SELECT * FROM users WHERE uid = ?", [
+      uid,
+    ]);
 
     if (result.length === 0) {
       return res.json({ message: "No user exists" });
@@ -84,7 +113,6 @@ app.get("/api/user", async (req, res) => {
       message: "User found",
       user: result[0],
     });
-
   } catch (error) {
     console.error("ERROR:", error.message);
     res.status(500).json({ error: error.message });
