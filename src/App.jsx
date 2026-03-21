@@ -7,6 +7,7 @@ import HomePage from "./components/layout/home/HomePage";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import useLocationState from "./Context/Location/useRealLocation";
 import { DetectLocation } from "./Context/Location/detectLocation";
+import ProviderPage from "./components/provider/providerPage";
 
 const App = () => {
   const theme = useTheme((state) => state.theme);
@@ -40,6 +41,7 @@ const App = () => {
        <div id="recaptcha-container"></div>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/provider" element= {<ProviderPage />} />
         </Routes>
       </div>
     </BrowserRouter>
