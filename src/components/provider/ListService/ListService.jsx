@@ -11,7 +11,7 @@ const ListService = () => {
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState(null);
 
-  const isDark = theme === "dark";
+  const isDark = theme === "dark";;
 
   const [formData, setFormData] = useState({
     serviceTitle: "",
