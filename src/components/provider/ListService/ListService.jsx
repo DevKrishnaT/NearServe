@@ -11,7 +11,7 @@ const ListService = () => {
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState(null);
 
-  const isDark = theme === "dark";;
+  const isDark = theme === "dark";
 
   const [formData, setFormData] = useState({
     serviceTitle: "",
@@ -23,6 +23,9 @@ const ListService = () => {
       address: "",
       lat: null,
       lng: null,
+      city: "",
+      state: "",
+      pincode: "",
     },
     availability: "",
     experience: "",
@@ -38,6 +41,7 @@ const ListService = () => {
       setFormData((prev) => ({
         ...prev,
         location: {
+          city: location.address.city,
           address: location.address.fullAddress,
           lat: location.latitude,
           lng: location.longitude,
@@ -247,6 +251,65 @@ const ListService = () => {
                 }))
               }
               placeholder="Edit or confirm address"
+              className={`w-full rounded-xl border ${borderColor} ${inputBg} ${textPrimary} px-4 py-3`}
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label className={textPrimary}>City</label>
+            <input
+              type="text"
+              value={formData.location.city}
+              
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  location: {
+                    ...prev.location,
+                    city: e.target.value,
+                  },
+                }))
+              }
+              placeholder="Enetr city"
+              className={`w-full rounded-xl border ${borderColor} ${inputBg} ${textPrimary} px-4 py-3`}
+            />
+
+          </div>
+          <div className="flex flex-col gap-2">
+            <label className={textPrimary}>State</label>
+            <input
+              type="text"
+              value={formData.location.state}
+              
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  location: {
+                    ...prev.location,
+                    state: e.target.value,
+                  },
+                }))
+              }
+              placeholder="Enetr state"
+              className={`w-full rounded-xl border ${borderColor} ${inputBg} ${textPrimary} px-4 py-3`}
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label className={textPrimary}>Pin code</label>
+            <input
+              type="text"
+              value={formData.location.pincode}
+              
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  location: {
+                    ...prev.location,
+                    pincode: e.target.value,
+                  },
+                }))
+              }
+              placeholder="Enetr pincode"
               className={`w-full rounded-xl border ${borderColor} ${inputBg} ${textPrimary} px-4 py-3`}
             />
           </div>

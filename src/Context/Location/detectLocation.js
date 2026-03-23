@@ -1,3 +1,5 @@
+
+
 export const DetectLocation = async () => {
   return new Promise((resolve, reject) => {
     if (!navigator.geolocation) {
@@ -19,6 +21,8 @@ export const DetectLocation = async () => {
         const data = await res.json();
 
         const prop = data?.features?.[0]?.properties;
+        console.log(prop);
+        
 
         if (!prop) {
           reject("Location not found");
@@ -33,6 +37,7 @@ export const DetectLocation = async () => {
             prop.neighbourhood ||
             prop.district ||
             prop.city,
+          
         };
 
         const locationData = {
