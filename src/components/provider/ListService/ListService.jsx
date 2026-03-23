@@ -42,6 +42,8 @@ const ListService = () => {
         ...prev,
         location: {
           city: location.address.city,
+          state: location.address.state,
+          pincode: location.address.pincode,
           address: location.address.fullAddress,
           lat: location.latitude,
           lng: location.longitude,
@@ -330,7 +332,7 @@ const ListService = () => {
 
           <div className="flex flex-col gap-2">
             <label className={textPrimary}>Experience</label>
-            
+
             <select
               name="experience"
               value={formData.experience}
