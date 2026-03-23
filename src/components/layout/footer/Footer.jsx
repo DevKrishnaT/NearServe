@@ -1,10 +1,16 @@
 import React from "react";
 import HeaderLogo from "../../ui/headerLogo";
 import useTheme from "../../../Context/Theme/ThemeContext";
+import { useNavigate } from "react-router-dom";
 
 const Footer = () => {
   const theme = useTheme((state) => state.theme);
   const isdark = theme == "dark";
+  const navigate = useNavigate();
+
+  const redirectProvider = () => {
+    navigate('/provider');
+  }
   
   return (
     <div
@@ -29,7 +35,7 @@ const Footer = () => {
             <li className={`${isdark ? "liDark" : "liLight"} transition-colors`}>
               Browse Services
             </li>
-            <li className={`${isdark ? "liDark" : "liLight"} transition-colors`}>
+            <li className={`${isdark ? "liDark" : "liLight"} transition-colors`} onClick={redirectProvider}>
               Become a Provider
             </li>
             <li className={`${isdark ? "liDark" : "liLight"} transition-colors`}>
