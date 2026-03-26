@@ -4,12 +4,16 @@ import AutoL from "../../features/Location/AutoLocationDetor/AutoL";
 
 import { LocationToLatLng } from "../../../Context/Location/ChangeLocationTolatlng";
 import { uploadImage } from "../../../Context/cloudnery/imageuplaoder";
+import { suggestionData } from "../../../Context/Location/SuggestAdress";
 
 const ListService = () => {
   const theme = useTheme((state) => state.theme);
   const [preview, setPreview] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState(null);
+  const [suggestions, setSuggestions] = useState([]);
+  const [loadingSuggestions, setLoadingSuggestions] = useState(false);
+  const [error, setError] = useState({});
 
   const isDark = theme === "dark";
 
@@ -79,6 +83,23 @@ const ListService = () => {
       setUploading(false);
     }
   };
+  const handleSelectAddress = (place) => {
+    const props = place.properties;
+
+    setFormData((prev) => ({
+      ...prev,
+      location: {
+        address: props.formatted,
+        lat: props.lat,
+        lng: props.lon,
+        city: props.city || "",
+        state: props.state || "",
+        pincode: props.postcode || "",
+      },
+    }));
+
+    setSuggestions([]);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -89,37 +110,92 @@ const ListService = () => {
     }));
   };
 
-  const handleLocationChange = async (e) => {
-    const value = e.target.value;
+  const handleLocationInput = async (value) => {
     setFormData((prev) => ({
       ...prev,
       location: {
         ...prev.location,
         address: value,
+        lat: null,
+        lng: null,
       },
     }));
-    const coords = await LocationToLatLng(value);
-    if (coords) {
-      setFormData((prev) => ({
-        ...prev,
-        location: {
-          address: value,
-          lat: coords.lat,
-          lng: coords.lng,
-        },
-      }));
+
+    if (value.length < 3) {
+      setSuggestions([]);
+      return;
     }
+
+    try {
+      setLoadingSuggestions(true);
+
+      const features = await suggestionData(value);
+      setSuggestions(features);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoadingSuggestions(false);
+    }
+  };
+
+  const handleLocationBlur = async (value) => {
+    if (!value) return;
+
+    if (formData.location.lat && formData.location.lng) return;
+
+    try {
+      const coords = await LocationToLatLng(value);
+
+      if (coords) {
+        setFormData((prev) => ({
+          ...prev,
+          location: {
+            ...prev.location,
+            lat: coords.lat,
+            lng: coords.lng,
+          },
+        }));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  const validation = () => {
+    const newErrors = {};
+
+    if (!formData.serviceTitle.trim()) {
+      newErrors.serviceTitle = "Required";
+    }
+
+    if (!formData.price) {
+      newErrors.price = "Required";
+    }
+
+    if (!formData.description.trim()) {
+      newErrors.description = "Required";
+    }
+
+    if (!formData.location.address.trim()) {
+      newErrors.address = "Required";
+    }
+
+    if (!formData.location.lat) {
+      newErrors.location = "Select valid location";
+    }
+    if (!formData.phoneNo) {
+      newErrors.phoneNo = "required";
+    }
+
+    setError(newErrors);
+
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    if (!formData.location.lat || !formData.location.lng) {
-      alert("Please select a valid location (auto or map).");
-      return;
+    if (validation()) {
+      console.log(formData);
     }
-
-    console.log("Service Data:", formData);
   };
 
   const cardBg = isDark ? "bg-[#1E293B]" : "bg-[#F8FAFC]";
@@ -129,12 +205,12 @@ const ListService = () => {
   const inputBg = isDark ? "bg-[#0F172A]" : "bg-white";
   const buttonBg = isDark ? "bg-[#3B82F6]" : "bg-[#2563EB]";
   const buttonHover = isDark ? "hover:bg-[#60A5FA]" : "hover:bg-[#1E3A8A]";
+  const onEror = "border-red-500";
 
   return (
     <div
-      className={`w-full min-h-screen pt-20 p-4 lg:p-8 ${
-        isDark ? "bg-[#0F172A]" : "bg-[#FFFFFF]"
-      } flex justify-center`}
+      className={`w-full min-h-screen pt-20 p-4 lg:p-8 ${isDark ? "bg-[#0F172A]" : "bg-[#FFFFFF]"
+        } flex justify-center`}
     >
       <div
         className={`w-full max-w-5xl rounded-2xl border ${borderColor} ${cardBg} p-6 lg:p-8 shadow-sm`}
@@ -162,7 +238,7 @@ const ListService = () => {
               value={formData.serviceTitle}
               onChange={handleChange}
               placeholder="e.g , plumbing service"
-              className={`w-full rounded-xl border ${borderColor} ${inputBg} ${textPrimary} px-4 py-3`}
+              className={`w-full rounded-xl border ${borderColor} ${inputBg} ${textPrimary} px-4 py-3 ${error.serviceTitle ? onEror : ""}`}
             />
           </div>
 
@@ -192,7 +268,7 @@ const ListService = () => {
               value={formData.price}
               onChange={handleChange}
               placeholder="e.g , 200"
-              className={`w-full rounded-xl border ${borderColor} ${inputBg} ${textPrimary} px-4 py-3`}
+              className={`w-full rounded-xl border ${borderColor} ${inputBg} ${textPrimary} px-4 py-3 ${error.price ? onEror : ""}`}
             />
           </div>
 
@@ -218,7 +294,7 @@ const ListService = () => {
               onChange={handleChange}
               rows="4"
               placeholder="full Description about your service"
-              className={`w-full rounded-xl border ${borderColor} ${inputBg} ${textPrimary} px-4 py-3`}
+              className={`w-full rounded-xl border ${borderColor} ${inputBg} ${textPrimary} px-4 py-3 ${error.description ? onEror : ""}`}
             />
           </div>
 
@@ -237,24 +313,31 @@ const ListService = () => {
             />
           </div>
 
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 relative">
             <label className={textPrimary}>Location</label>
+
             <input
               type="text"
               value={formData.location.address}
-              onBlur={handleLocationChange}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  location: {
-                    ...prev.location,
-                    address: e.target.value,
-                  },
-                }))
-              }
-              placeholder="Edit or confirm address"
-              className={`w-full rounded-xl border ${borderColor} ${inputBg} ${textPrimary} px-4 py-3`}
+              onChange={(e) => handleLocationInput(e.target.value)}
+              onBlur={(e) => handleLocationChange(e.target.value)}
+              placeholder="Search address..."
+              className={`w-full rounded-xl border ${borderColor} ${inputBg} ${textPrimary} px-4 py-3 ${error.location ? onEror : ""}`}
             />
+
+            {suggestions.length > 0 && (
+              <div className="absolute top-full left-0 w-full bg-white border rounded-xl shadow z-50 max-h-60 overflow-y-auto">
+                {suggestions.map((place, index) => (
+                  <div
+                    key={index}
+                    onClick={() => handleSelectAddress(place)}
+                    className="p-3 cursor-pointer hover:bg-gray-100 text-sm"
+                  >
+                    {place.properties.formatted}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="flex flex-col gap-2">
@@ -262,7 +345,6 @@ const ListService = () => {
             <input
               type="text"
               value={formData.location.city}
-              
               onChange={(e) =>
                 setFormData((prev) => ({
                   ...prev,
@@ -273,16 +355,14 @@ const ListService = () => {
                 }))
               }
               placeholder="Enetr city"
-              className={`w-full rounded-xl border ${borderColor} ${inputBg} ${textPrimary} px-4 py-3`}
+              className={`w-full rounded-xl border ${borderColor} ${inputBg} ${textPrimary} px-4 py-3 ${error.location ? onEror : ""}`}
             />
-
           </div>
           <div className="flex flex-col gap-2">
             <label className={textPrimary}>State</label>
             <input
               type="text"
               value={formData.location.state}
-              
               onChange={(e) =>
                 setFormData((prev) => ({
                   ...prev,
@@ -293,7 +373,7 @@ const ListService = () => {
                 }))
               }
               placeholder="Enetr state"
-              className={`w-full rounded-xl border ${borderColor} ${inputBg} ${textPrimary} px-4 py-3`}
+              className={`w-full rounded-xl border ${borderColor} ${inputBg} ${textPrimary} px-4 py-3 ${error.location ? onEror : ""} `}
             />
           </div>
           <div className="flex flex-col gap-2">
@@ -301,7 +381,6 @@ const ListService = () => {
             <input
               type="text"
               value={formData.location.pincode}
-              
               onChange={(e) =>
                 setFormData((prev) => ({
                   ...prev,
@@ -312,7 +391,7 @@ const ListService = () => {
                 }))
               }
               placeholder="Enetr pincode"
-              className={`w-full rounded-xl border ${borderColor} ${inputBg} ${textPrimary} px-4 py-3`}
+              className={`w-full rounded-xl border ${borderColor} ${inputBg} ${textPrimary} px-4 py-3 ${error.location ? onEror : ""}`}
             />
           </div>
 
@@ -322,7 +401,7 @@ const ListService = () => {
               name="availability"
               value={formData.availability}
               onChange={handleChange}
-              className={`w-full rounded-xl border ${borderColor} ${inputBg} ${textPrimary} px-4 py-3`}
+              className={`w-full rounded-xl border ${borderColor} ${inputBg} ${textPrimary} px-4 py-3 ${error.availability ? onEror : ""}`}
             >
               <option value="daytime"> DayTime(9 - 5)</option>
               <option value="nighttime"> NightTime(5 - 9)</option>
@@ -355,7 +434,7 @@ const ListService = () => {
               value={formData.phoneNo}
               onChange={handleChange}
               placeholder="your phone number"
-              className={`w-full rounded-xl border ${borderColor} ${inputBg} ${textPrimary} px-4 py-3`}
+              className={`w-full rounded-xl border ${borderColor} ${inputBg} ${textPrimary} px-4 py-3 ${error.phoneNo ? onEror : ""}`}
             />
           </div>
 
