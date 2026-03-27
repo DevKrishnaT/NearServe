@@ -5,6 +5,9 @@ import AutoL from "../../features/Location/AutoLocationDetor/AutoL";
 import { LocationToLatLng } from "../../../Context/Location/ChangeLocationTolatlng";
 import { uploadImage } from "../../../Context/cloudnery/imageuplaoder";
 import { suggestionData } from "../../../Context/Location/SuggestAdress";
+import { log } from "firebase/firestore/lite/pipelines";
+import api from "../../../Context/api/api";
+import { getAuth } from "firebase/auth";
 
 const ListService = () => {
   const theme = useTheme((state) => state.theme);
@@ -14,6 +17,7 @@ const ListService = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const [error, setError] = useState({});
+  const [submitError, setSubmitError] = useState(null);
 
   const isDark = theme === "dark";
 
@@ -31,15 +35,13 @@ const ListService = () => {
       state: "",
       pincode: "",
     },
-    availability: "",
+    availability: "daytime",
     experience: "",
-    phoneNo: "",
     image: [],
   });
 
   useEffect(() => {
     const data = localStorage.getItem("userLocation");
-
     const location = data ? JSON.parse(data) : null;
     if (location) {
       setFormData((prev) => ({
@@ -163,38 +165,87 @@ const ListService = () => {
   const validation = () => {
     const newErrors = {};
 
-    if (!formData.serviceTitle.trim()) {
-      newErrors.serviceTitle = "Required";
-    }
+    const title = formData.serviceTitle.trim();
 
+    if (!title) {
+      newErrors.serviceTitle = "Required";
+    } else if (title.length < 20) {
+      newErrors.serviceTitle = "Title must be at least 20 characters long";
+    } else if (!isNaN(title)) {
+      newErrors.serviceTitle = "Title cannot be only a number";
+    }
     if (!formData.price) {
       newErrors.price = "Required";
+    } else if (!/^\d*$/.test(formData.price)) {
+      newErrors.price = "Price must be a number";
+    } else if (Number(formData.price) < 100) {
+      newErrors.price = "Minimum price is 100";
     }
+    const description = formData.description.trim();
 
-    if (!formData.description.trim()) {
+    if (!description) {
       newErrors.description = "Required";
+    } else if (description.length < 30) {
+      newErrors.description = "Description must be at least 30 characters long";
+    } else if (!isNaN(description)) {
+      newErrors.description = "Description cannot be only a number";
     }
 
     if (!formData.location.address.trim()) {
       newErrors.address = "Required";
     }
+    if (!formData.category) {
+      newErrors.category = "Category is required";
+    }
 
-    if (!formData.location.lat) {
+    if (formData.location.lat == null) {
       newErrors.location = "Select valid location";
     }
-    if (!formData.phoneNo) {
-      newErrors.phoneNo = "required";
-    }
 
+    if (formData.image.length === 0) {
+      newErrors.image = "At least one image is required";
+    }
     setError(newErrors);
 
     return Object.keys(newErrors).length === 0;
   };
-
-  const handleSubmit = (e) => {
+  const auth = getAuth();
+  const user = auth.currentUser;
+console.log(user);
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validation()) {
-      console.log(formData);
+    if (!validation()) {
+      log("Validation failed");
+      return;
+    }
+    console.log("Enmtered");
+
+    const payload = {
+      title: formData.serviceTitle,
+      category: formData.category,
+      price: formData.price,
+      priceType: formData.pricingType,
+      description: formData.description,
+      location: formData.location,
+      availability: formData.availability,
+      experience: formData.experience,
+      image: formData.image,
+    };
+
+    try {
+      console.log("done1");
+      const token = await user.getIdToken();
+      
+      console.log("done");
+      await api.post("/user/services", payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      alert("done");
+    } catch (error) {
+      return setSubmitError("try Again Sumthing went Wrong");
     }
   };
 
@@ -209,8 +260,9 @@ const ListService = () => {
 
   return (
     <div
-      className={`w-full min-h-screen pt-20 p-4 lg:p-8 ${isDark ? "bg-[#0F172A]" : "bg-[#FFFFFF]"
-        } flex justify-center`}
+      className={`w-full min-h-screen pt-20 p-4 lg:p-8 ${
+        isDark ? "bg-[#0F172A]" : "bg-[#FFFFFF]"
+      } flex justify-center`}
     >
       <div
         className={`w-full max-w-5xl rounded-2xl border ${borderColor} ${cardBg} p-6 lg:p-8 shadow-sm`}
@@ -240,6 +292,9 @@ const ListService = () => {
               placeholder="e.g , plumbing service"
               className={`w-full rounded-xl border ${borderColor} ${inputBg} ${textPrimary} px-4 py-3 ${error.serviceTitle ? onEror : ""}`}
             />
+            {error.serviceTitle && (
+              <p className="text-sm text-red-500 mt-1">{error.serviceTitle}</p>
+            )}
           </div>
 
           <div className="flex flex-col gap-2">
@@ -248,7 +303,7 @@ const ListService = () => {
               name="category"
               value={formData.category}
               onChange={handleChange}
-              className={`w-full rounded-xl border ${borderColor} ${inputBg} ${textPrimary} px-4 py-3`}
+              className={`w-full rounded-xl border ${borderColor} ${inputBg} ${textPrimary} px-4 py-3 ${error.category ? onEror : ""}`}
             >
               <option value="">Select category</option>
               <option value="cleaning">Cleaning</option>
@@ -263,13 +318,17 @@ const ListService = () => {
           <div className="flex flex-col gap-2">
             <label className={textPrimary}>Price</label>
             <input
-              type="number"
+              type="text"
+              inputMode="numeric"
               name="price"
               value={formData.price}
               onChange={handleChange}
               placeholder="e.g , 200"
               className={`w-full rounded-xl border ${borderColor} ${inputBg} ${textPrimary} px-4 py-3 ${error.price ? onEror : ""}`}
             />
+            {error.price && (
+              <p className="text-sm text-red-500 mt-1">{error.price}</p>
+            )}
           </div>
 
           <div className="flex flex-col gap-2">
@@ -296,6 +355,9 @@ const ListService = () => {
               placeholder="full Description about your service"
               className={`w-full rounded-xl border ${borderColor} ${inputBg} ${textPrimary} px-4 py-3 ${error.description ? onEror : ""}`}
             />
+            {error.description && (
+              <p className="text-sm text-red-500 mt-1">{error.description}</p>
+            )}
           </div>
 
           <div className="lg:col-span-2">
@@ -320,7 +382,7 @@ const ListService = () => {
               type="text"
               value={formData.location.address}
               onChange={(e) => handleLocationInput(e.target.value)}
-              onBlur={(e) => handleLocationChange(e.target.value)}
+              onBlur={(e) => handleLocationBlur(e.target.value)}
               placeholder="Search address..."
               className={`w-full rounded-xl border ${borderColor} ${inputBg} ${textPrimary} px-4 py-3 ${error.location ? onEror : ""}`}
             />
@@ -426,18 +488,6 @@ const ListService = () => {
             </select>
           </div>
 
-          <div className="flex flex-col gap-2">
-            <label className={textPrimary}>Phone</label>
-            <input
-              type="tel"
-              name="phoneNo"
-              value={formData.phoneNo}
-              onChange={handleChange}
-              placeholder="your phone number"
-              className={`w-full rounded-xl border ${borderColor} ${inputBg} ${textPrimary} px-4 py-3 ${error.phoneNo ? onEror : ""}`}
-            />
-          </div>
-
           <div className="lg:col-span-2 flex flex-col gap-2">
             <label className={textPrimary}>Image</label>
             <input
@@ -447,6 +497,9 @@ const ListService = () => {
               onChange={handleImageUpload}
               className={`w-full rounded-xl border ${borderColor} ${inputBg} ${textMuted} px-4 py-3`}
             />
+            {error.image && (
+              <p className="text-sm text-red-500 mt-1">{error.image}</p>
+            )}
             {preview.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">
                 {preview.map((src, index) => (

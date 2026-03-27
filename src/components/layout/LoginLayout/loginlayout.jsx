@@ -3,7 +3,7 @@ import HeaderLogo from "../../ui/headerLogo";
 import Inputnumber from "../../ui/Inputnumber";
 import MainButton from "../../ui/button/mainButton";
 import useTheme from "../../../Context/Theme/ThemeContext";
-import { validation } from "../../../Context/Login/validation/validatePhoneNo";
+import { usePhoneValidation } from "../../../Context/Login/validation/validatePhoneNo";
 import useLogin from "../../../Context/Login/useLogin";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { auth } from "../../../../firebase";
@@ -57,7 +57,7 @@ const Loginlayout = () => {
   };
 
   const handleSubmit = async () => {
-    const isValid = validation(phoneNo);
+    const isValid = usePhoneValidation(phoneNo);
     if (!isValid) {
       setError("Invalid number");
       return;
