@@ -102,7 +102,16 @@ app.post("/api/user/services", async (req, res) => {
     }
 
     const decoded = await admin.auth().verifyIdToken(token);
-    const userId = decoded.uid;
+    const uid = decoded.uid;
+    const [row] = await pool.query("SELECT * FROM users WHERE uid = ?", [uid]);
+    if (row.length === 0) {
+      return res.status(404).json({ message: "user not found" });
+    }
+
+    const user = row[0];
+
+    const userId = user.id;
+
     const {
       title,
       category,
@@ -110,10 +119,11 @@ app.post("/api/user/services", async (req, res) => {
       priceType,
       description,
       location,
-      avalibilty,
+      availability,
       experience,
-      img,
+      image,
     } = req.body;
+    console.log(image);
 
     if (
       !title ||
@@ -122,16 +132,19 @@ app.post("/api/user/services", async (req, res) => {
       !location?.lat ||
       !location?.lng
     ) {
+      console.log(location);
+      console.log(title, price, location.address, location.lat, location.lng);
       return res.status(400).json({ error: "Required fields missing" });
     }
     await connection.beginTransaction();
 
     const [addressResult] = await connection.query(
       `INSERT INTO addresses
-      (user_id , full_adress, city , state , pincode , latitude , longitude)
-      VALUES (? , ? , ? , ? , ? , ? , ?)`,
+      (user_id ,label , full_address, city , state , pincode , latitude , longitude)
+      VALUES (? , ?,? , ? , ? , ? , ? , ?)`,
       [
         userId,
+        location.label,
         location.address,
         location.city,
         location.state,
@@ -145,23 +158,24 @@ app.post("/api/user/services", async (req, res) => {
     const [serviceResult] = await connection.query(
       `INSERT INTO services
     (user_id , title , category , price , price_type, description , address_id , availability , experience )
-    VALUES(? , ? , ? , ? , ? ,? , ? , ? ,?)`,
-    )[
-      (userId,
-      title,
-      category,
-      price,
-      priceType,
-      description,
-      addressId,
-      avalibilty,
-      experience)
-    ];
+    VALUES (? , ? , ? , ? , ? ,? , ? , ? ,?)`,
+      [
+        userId,
+        title,
+        category,
+        price,
+        priceType,
+        description,
+        addressId,
+        availability,
+        experience,
+      ],
+    );
 
     const serviceId = serviceResult.insertId;
 
-    if (img && img.length > 0) {
-      const imageValues = img.map((url) => [serviceId, url]);
+    if (image && image.length > 0) {
+      const imageValues = image.map((url) => [serviceId, url]);
       await connection.query(
         `INSERT INTO service_images (service_id, image_url) VALUES ?`,
         [imageValues],

@@ -8,6 +8,7 @@ import { suggestionData } from "../../../Context/Location/SuggestAdress";
 import { log } from "firebase/firestore/lite/pipelines";
 import api from "../../../Context/api/api";
 import { getAuth } from "firebase/auth";
+import SuccsessPop from "./succsessPop";
 
 const ListService = () => {
   const theme = useTheme((state) => state.theme);
@@ -18,6 +19,7 @@ const ListService = () => {
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const [error, setError] = useState({});
   const [submitError, setSubmitError] = useState(null);
+  const [showPop, setShowPop] = useState(false);
 
   const isDark = theme === "dark";
 
@@ -28,6 +30,7 @@ const ListService = () => {
     pricingType: "fixed",
     description: "",
     location: {
+      label: "service",
       address: "",
       lat: null,
       lng: null,
@@ -36,7 +39,7 @@ const ListService = () => {
       pincode: "",
     },
     availability: "daytime",
-    experience: "",
+    experience:1,
     image: [],
   });
 
@@ -243,7 +246,7 @@ console.log(user);
         },
       });
 
-      alert("done");
+      setShowPop(true);
     } catch (error) {
       return setSubmitError("try Again Sumthing went Wrong");
     }
@@ -480,11 +483,11 @@ console.log(user);
               onChange={handleChange}
               className={`w-full rounded-xl border ${borderColor} ${inputBg} ${textPrimary} px-4 py-3`}
             >
-              <option value="1year">1Year</option>
-              <option value="2year">2Year</option>
-              <option value="3year">3Year</option>
-              <option value="4year">4Year</option>
-              <option value="5year+">5+Year</option>
+              <option value={1}>1Year</option>
+              <option value={2}>2Year</option>
+              <option value={3}>3Year</option>
+              <option value={4}>4Year</option>
+              <option value={5}>5+Year</option>
             </select>
           </div>
 
@@ -531,6 +534,9 @@ console.log(user);
             </button>
           </div>
         </form>
+        {showPop && (
+          <SuccsessPop />
+        )}
       </div>
     </div>
   );
