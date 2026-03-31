@@ -4,7 +4,7 @@ import useTheme from "../../../Context/Theme/ThemeContext";
 import Menu from "./menu";
 import useMenu from "../../../Context/Menu/MenuContext";
 
-const MobileMenu = () => {
+const MobileMenu = ({children}) => {
   const theme = useTheme((state) => state.theme);
   const isSidebarOpen = useMenu((state) => state.isSidebarOpen);
   const toggleMenu = useMenu((state) => state.toggleMenu);
@@ -48,7 +48,7 @@ const MobileMenu = () => {
         )}
         
       </div>
-      <Menu />
+      {children}
     </div>
     
   );

@@ -7,6 +7,7 @@ import DescktopMenu from "../menu/desktop/DescktopMenu";
 import ThemeToggle from "../../features/ThemeToggle/ThemeToggle";
 import useTheme from "../../../Context/Theme/ThemeContext";
 import AnimatedPlaceHolder from "../../ui/AnimatedPlaceHolder";
+import Menu from "../menu/menu";
 
 const Header = () => {
   const theme = useTheme((state) => state.theme);
@@ -27,7 +28,7 @@ const Header = () => {
         className={`row1 flex  justify-between items-center  mb-3 max-lg:px-4 `}
       >
         <Headerlocation />
-        <MobileMenu />
+        <MobileMenu children={<Menu />}/>
       </div>
 
       <div className="row2 mx-3 lg:w-full relative">

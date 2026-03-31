@@ -8,6 +8,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import useLocationState from "./Context/Location/useRealLocation";
 import { DetectLocation } from "./Context/Location/detectLocation";
 import ProviderPage from "./components/provider/providerPage";
+import Dashboard from "./components/provider/dashboard/dashboard";
 
 const App = () => {
   const theme = useTheme((state) => state.theme);
@@ -42,6 +43,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/provider" element= {<ProviderPage />} />
+          <Route path="/provider/dashboard" element= {<Dashboard />}/>
         </Routes>
       </div>
     </BrowserRouter>
