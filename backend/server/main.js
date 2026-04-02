@@ -4,6 +4,9 @@ import pool from "../dbconnection/db.js";
 import admin from "firebase-admin";
 import cors from "cors";
 import fs from "fs";
+import userRouter from "../routes/users/userRoutes.js";
+import providerRouter from "../routes/provider/serviceRoutes.js";
+import serviceRoutes from "../routes/service/seriviceConsumeRoutes.js";
 
 const serviceAccount = JSON.parse(
   fs.readFileSync("../serviceAccountKey/ServiceAccountKey.json", "utf-8"),
@@ -31,199 +34,203 @@ app.use(
 app.get("/", (req, res) => {
   res.send("API is running 🚀");
 });
-app.post("/api/user", async (req, res) => {
-  try {
-    const token = req.headers.authorization?.split(" ")[1];
 
-    const decoded = await admin.auth().verifyIdToken(token);
+app.use("/api/user", userRouter);
+app.use("/api/provider/list", providerRouter);
+app.use("/api/provider/services" , serviceRoutes);
+// app.post("/api/user", async (req, res) => {
+//   try {
+//     const token = req.headers.authorization?.split(" ")[1];
 
-    const uid = decoded.uid;
+//     const decoded = await admin.auth().verifyIdToken(token);
 
-    const [rows] = await pool.query("SELECT * FROM users WHERE uid = ?", [uid]);
+//     const uid = decoded.uid;
 
-    if (rows.length > 0) {
-      return res.json({
-        message: "User already exists",
-        user: rows[0],
-      });
-    }
+//     const [rows] = await pool.query("SELECT * FROM users WHERE uid = ?", [uid]);
 
-    const { name, phoneNo } = req.body;
+//     if (rows.length > 0) {
+//       return res.json({
+//         message: "User already exists",
+//         user: rows[0],
+//       });
+//     }
 
-    const [result] = await pool.query(
-      "INSERT INTO users (uid, name, phoneNo) VALUES (?, ?, ?)",
-      [uid, name, phoneNo],
-    );
+//     const { name, phoneNo } = req.body;
 
-    res.json({ message: "User created" });
-  } catch (err) {
-    res.status(401).json({ error: "Unauthorized" });
-  }
-});
+//     const [result] = await pool.query(
+//       "INSERT INTO users (uid, name, phoneNo) VALUES (?, ?, ?)",
+//       [uid, name, phoneNo],
+//     );
 
-app.patch("/api/user", async (req, res) => {
-  try {
-    const token = req.headers.authorization?.split(" ")[1];
-    if (!token) {
-      return res.status(401).json({ error: "No token provided" });
-    }
-    const { name } = req.body;
-    const decoded = await admin.auth().verifyIdToken(token);
-    const uid = decoded.uid;
-    const [result] = await pool.query("SELECT * FROM users WHERE uid = ?", [
-      uid,
-    ]);
+//     res.json({ message: "User created" });
+//   } catch (err) {
+//     res.status(401).json({ error: "Unauthorized" });
+//   }
+// });
 
-    if (result.length === 0) {
-      return res.status(404).json({ message: "user dint find" });
-    }
+// app.patch("/api/user", async (req, res) => {
+//   try {
+//     const token = req.headers.authorization?.split(" ")[1];
+//     if (!token) {
+//       return res.status(401).json({ error: "No token provided" });
+//     }
+//     const { name } = req.body;
+//     const decoded = await admin.auth().verifyIdToken(token);
+//     const uid = decoded.uid;
+//     const [result] = await pool.query("SELECT * FROM users WHERE uid = ?", [
+//       uid,
+//     ]);
 
-    const [edit] = await pool.query("UPDATE users SET name = ? WHERE uid = ?", [
-      name,
-      uid,
-    ]);
+//     if (result.length === 0) {
+//       return res.status(404).json({ message: "user dint find" });
+//     }
 
-    if (edit.affectedRows === 0) {
-      return res.status(401).json({ message: " try again" });
-    } else {
-      return res.status(200).json({ message: "Updated successfully" });
-    }
-  } catch (error) {
-    console.error(error);
-  }
-});
+//     const [edit] = await pool.query("UPDATE users SET name = ? WHERE uid = ?", [
+//       name,
+//       uid,
+//     ]);
 
-app.post("/api/user/services", async (req, res) => {
-  const connection = await pool.getConnection();
-  try {
-    const token = req.headers.authorization?.split(" ")[1];
-    if (!token) {
-      return res.status(401).json({ error: "No token provided" });
-    }
+//     if (edit.affectedRows === 0) {
+//       return res.status(401).json({ message: " try again" });
+//     } else {
+//       return res.status(200).json({ message: "Updated successfully" });
+//     }
+//   } catch (error) {
+//     console.error(error);
+//   }
+// });
 
-    const decoded = await admin.auth().verifyIdToken(token);
-    const uid = decoded.uid;
-    const [row] = await pool.query("SELECT * FROM users WHERE uid = ?", [uid]);
-    if (row.length === 0) {
-      return res.status(404).json({ message: "user not found" });
-    }
+// app.post("/api/user/services", async (req, res) => {
+//   const connection = await pool.getConnection();
+//   try {
+//     const token = req.headers.authorization?.split(" ")[1];
+//     if (!token) {
+//       return res.status(401).json({ error: "No token provided" });
+//     }
 
-    const user = row[0];
+//     const decoded = await admin.auth().verifyIdToken(token);
+//     const uid = decoded.uid;
+//     const [row] = await pool.query("SELECT * FROM users WHERE uid = ?", [uid]);
+//     if (row.length === 0) {
+//       return res.status(404).json({ message: "user not found" });
+//     }
 
-    const userId = user.id;
+//     const user = row[0];
 
-    const {
-      title,
-      category,
-      price,
-      priceType,
-      description,
-      location,
-      availability,
-      experience,
-      image,
-    } = req.body;
-    console.log(image);
+//     const userId = user.id;
 
-    if (
-      !title ||
-      !price ||
-      !location?.address ||
-      !location?.lat ||
-      !location?.lng
-    ) {
-      console.log(location);
-      console.log(title, price, location.address, location.lat, location.lng);
-      return res.status(400).json({ error: "Required fields missing" });
-    }
-    await connection.beginTransaction();
+//     const {
+//       title,
+//       category,
+//       price,
+//       priceType,
+//       description,
+//       location,
+//       availability,
+//       experience,
+//       image,
+//     } = req.body;
+//     console.log(image);
 
-    const [addressResult] = await connection.query(
-      `INSERT INTO addresses
-      (user_id ,label , full_address, city , state , pincode , latitude , longitude)
-      VALUES (? , ?,? , ? , ? , ? , ? , ?)`,
-      [
-        userId,
-        location.label,
-        location.address,
-        location.city,
-        location.state,
-        location.pincode,
-        location.lat,
-        location.lng,
-      ],
-    );
-    const addressId = addressResult.insertId;
+//     if (
+//       !title ||
+//       !price ||
+//       !location?.address ||
+//       !location?.lat ||
+//       !location?.lng
+//     ) {
+//       console.log(location);
+//       console.log(title, price, location.address, location.lat, location.lng);
+//       return res.status(400).json({ error: "Required fields missing" });
+//     }
+//     await connection.beginTransaction();
 
-    const [serviceResult] = await connection.query(
-      `INSERT INTO services
-    (user_id , title , category , price , price_type, description , address_id , availability , experience )
-    VALUES (? , ? , ? , ? , ? ,? , ? , ? ,?)`,
-      [
-        userId,
-        title,
-        category,
-        price,
-        priceType,
-        description,
-        addressId,
-        availability,
-        experience,
-      ],
-    );
+//     const [addressResult] = await connection.query(
+//       `INSERT INTO addresses
+//       (user_id ,label , full_address, city , state , pincode , latitude , longitude)
+//       VALUES (? , ?,? , ? , ? , ? , ? , ?)`,
+//       [
+//         userId,
+//         location.label,
+//         location.address,
+//         location.city,
+//         location.state,
+//         location.pincode,
+//         location.lat,
+//         location.lng,
+//       ],
+//     );
+//     const addressId = addressResult.insertId;
 
-    const serviceId = serviceResult.insertId;
+//     const [serviceResult] = await connection.query(
+//       `INSERT INTO services
+//     (user_id , title , category , price , price_type, description , address_id , availability , experience )
+//     VALUES (? , ? , ? , ? , ? ,? , ? , ? ,?)`,
+//       [
+//         userId,
+//         title,
+//         category,
+//         price,
+//         priceType,
+//         description,
+//         addressId,
+//         availability,
+//         experience,
+//       ],
+//     );
 
-    if (image && image.length > 0) {
-      const imageValues = image.map((url) => [serviceId, url]);
-      await connection.query(
-        `INSERT INTO service_images (service_id, image_url) VALUES ?`,
-        [imageValues],
-      );
-    }
+//     const serviceId = serviceResult.insertId;
 
-    await connection.commit();
-    res.status(201).json({
-      message: "Service created successfully",
-      serviceId,
-    });
-  } catch (error) {
-    await connection.rollback();
-    console.error(error);
+//     if (image && image.length > 0) {
+//       const imageValues = image.map((url) => [serviceId, url]);
+//       await connection.query(
+//         `INSERT INTO service_images (service_id, image_url) VALUES ?`,
+//         [imageValues],
+//       );
+//     }
 
-    res.status(500).json({ error: "Server error" });
-  } finally {
-    connection.release();
-  }
-});
-app.get("/api/user", async (req, res) => {
-  try {
-    const token = req.headers.authorization?.split(" ")[1];
+//     await connection.commit();
+//     res.status(201).json({
+//       message: "Service created successfully",
+//       serviceId,
+//     });
+//   } catch (error) {
+//     await connection.rollback();
+//     console.error(error);
 
-    if (!token) {
-      return res.status(401).json({ error: "No token provided" });
-    }
+//     res.status(500).json({ error: "Server error" });
+//   } finally {
+//     connection.release();
+//   }
+// });
+// app.get("/api/user", async (req, res) => {
+//   try {
+//     const token = req.headers.authorization?.split(" ")[1];
 
-    const decoded = await admin.auth().verifyIdToken(token);
-    const uid = decoded.uid;
+//     if (!token) {
+//       return res.status(401).json({ error: "No token provided" });
+//     }
 
-    const [result] = await pool.query("SELECT * FROM users WHERE uid = ?", [
-      uid,
-    ]);
+//     const decoded = await admin.auth().verifyIdToken(token);
+//     const uid = decoded.uid;
 
-    if (result.length === 0) {
-      return res.json({ message: "No user exists" });
-    }
+//     const [result] = await pool.query("SELECT * FROM users WHERE uid = ?", [
+//       uid,
+//     ]);
 
-    return res.json({
-      message: "User found",
-      user: result[0],
-    });
-  } catch (error) {
-    console.error("ERROR:", error.message);
-    res.status(500).json({ error: error.message });
-  }
-});
+//     if (result.length === 0) {
+//       return res.json({ message: "No user exists" });
+//     }
+
+//     return res.json({
+//       message: "User found",
+//       user: result[0],
+//     });
+//   } catch (error) {
+//     console.error("ERROR:", error.message);
+//     res.status(500).json({ error: error.message });
+//   }
+// });
 
 app.listen(4000, async () => {
   try {

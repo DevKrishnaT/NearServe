@@ -240,7 +240,7 @@ console.log(user);
       const token = await user.getIdToken();
       
       console.log("done");
-      await api.post("/user/services", payload, {
+      await api.post("/provider/list", payload, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
