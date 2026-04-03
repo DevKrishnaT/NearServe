@@ -15,15 +15,13 @@ serviceRoutes.get("/", async (req, res) => {
 
     const decoded = await admin.auth().verifyIdToken(token);
     const uid = decoded.uid;
-    const [user] = await pool.query("SELECT * FROM users WHERE UID = ?", [uid]);
-    if (user.length === 0) {
-      return res.status(404).json({ message: "user not found" });
-    }
-    console.log(user);
-    const user_id = user[0].id;
+   
     const [services] = await pool.query(
-      "SELECT * FROM services WHERE user_id = ?",
-      [user_id],
+      `SELECT services.*, users.name 
+       FROM services 
+       JOIN users ON services.user_id = users.id 
+       WHERE users.UID = ?`,
+      [uid],
     );
     if (services.length === 0) {
       return res.status(404).json({ message: "no service found" });

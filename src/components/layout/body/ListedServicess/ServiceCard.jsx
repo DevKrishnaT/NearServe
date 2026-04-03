@@ -1,18 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import img from "../../../../uploads/test.png";
 import useTheme from "../../../../Context/Theme/ThemeContext";
 
-const ServiceCard = ({
-  title,
-  discription,
-  provider,
-  distance,
-  price,
-  eta,
-  verified,
-}) => {
+const ServiceCard = ({ service }) => {
+  const { title, provider, category, price, price_type, experience } = service;
   const theme = useTheme((state) => state.theme);
   const isDark = theme === "dark";
+
+  const eta = "1hr";
+  const distance = 4.6;
 
   return (
     <div
@@ -25,13 +21,17 @@ const ServiceCard = ({
       `}
     >
       <div className="h-44 w-full overflow-hidden">
-        <img src={img} alt={title} className="w-full h-full object-cover" />
+        <img
+          src={img}
+          alt={`${category} - ${provider}`}
+          className="w-full h-full object-cover"
+        />
       </div>
 
       <div className="p-4 flex flex-col gap-2">
-        <h3 className="font-semibold text-lg truncate">{title}</h3>
+        <h3 className="font-semibold text-lg truncate">{category}</h3>
 
-        <span className="text-md line-clamp-2 ">{discription}</span>
+        <span className="text-md line-clamp-2 ">{title}</span>
 
         <p className="text-sm opacity-70 truncate">{provider}</p>
 
@@ -72,7 +72,7 @@ const ServiceCard = ({
           )}
         </div>
 
-        {verified && (
+        {true && (
           <span className="text-xs text-green-500 font-medium flex gap-1 items-center">
             <svg
               width="20"
@@ -91,7 +91,9 @@ const ServiceCard = ({
         )}
 
         <div className="flex items-center justify-between pt-1">
-          <span className="font-bold text-primary">₹{price} onwards</span>
+          <span className="font-bold text-primary">
+            ₹{price} {price_type}
+          </span>
         </div>
 
         <button

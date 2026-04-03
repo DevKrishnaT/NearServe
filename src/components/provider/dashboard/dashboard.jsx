@@ -5,6 +5,7 @@ import HeaderLogo from "../../ui/headerLogo";
 import ProviderMenu from "../Menu/ProviderMenu";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import api from "../../../Context/api/api";
+import ServiceCard from "../../layout/body/ListedServicess/ServiceCard";
 
 const Dashboard = () => {
   const theme = useTheme((state) => state.theme);
@@ -26,7 +27,6 @@ const Dashboard = () => {
         });
 
         setService(res.data.services);
-        
       } catch (error) {
         console.error(error);
       }
@@ -36,7 +36,8 @@ const Dashboard = () => {
   }, []);
   useEffect(() => {
     console.log(service);
-  }, [service]);
+  });
+
   return (
     <div
       className={`${isDark ? "bg-[#0F172A]" : "bg-white"}  w-full h-full flex flex-col`}
@@ -50,9 +51,16 @@ const Dashboard = () => {
         </div>
         <MobileMenu children={<ProviderMenu />} />
       </div>
-      <ProviderMenu child={<HeaderLogo />} />
 
-      <div className={`grid grid-cols-1 px-5 py-5 lg:grid-cols-3`}></div>
+      <div className="hidden lg:block w-64">
+        <ProviderMenu child={<HeaderLogo />} />
+      </div>
+
+      <div className={`grid grid-cols-1 px-5 py-5 lg:grid-cols-3 gap-4 `}>
+        {service.map((item) => (
+          <ServiceCard key={item.id} service={item} />
+        ))}
+      </div>
     </div>
   );
 };
