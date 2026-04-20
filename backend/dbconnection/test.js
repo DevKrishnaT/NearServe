@@ -10,5 +10,7 @@ async function checkDB() {
     console.error("❌ Connection failed:", err.message);
   }
 }
+console.log("ans");
+
 
 checkDB();
