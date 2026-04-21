@@ -46,7 +46,7 @@ app.listen(4000, async () => {
   try {
     await pool.query("SELECT 1");
 
-    console.log("✅ DB connected");
+    console.log("✅ DB connected s");
     console.log("🚀 Server running on http://localhost:4000");
   } catch (err) {
     console.error("❌ DB connection failed:", err.message);
