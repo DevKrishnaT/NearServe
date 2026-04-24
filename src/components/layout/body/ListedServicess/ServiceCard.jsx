@@ -84,7 +84,7 @@ useEffect(() => {
         </p>
 
         {experience != null && (
-          <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-md w-fit">
+          <span className="text-lg bg-blue-100 text-blue-600 px-2 py-1 rounded-md w-fit">
             {experience}+ yrs experience
           </span>
         )}
