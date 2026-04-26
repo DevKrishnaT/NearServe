@@ -109,7 +109,7 @@ useEffect(() => {
 
         {verified && (
           <span className="text-xs text-green-500 font-medium flex gap-1 items-center">
-             Verified Provider
+            ✔ Verified Provider
           </span>
         )}
 
