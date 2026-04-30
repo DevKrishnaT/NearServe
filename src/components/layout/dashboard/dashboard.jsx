@@ -89,7 +89,7 @@ const Dashboard = () => {
           isDark ? "bg-[#0F172A] text-white" : "bg-white text-black"
         }`}
       >
-        <div className="flex justify-between items-center px-6 py-4 border-b">
+        <div className="flex justify-between items-center px-5 py-4 border-b">
           <h2 className="text-xl font-semibold">Dashboard</h2>
           <button
             onClick={closeDashboard}
