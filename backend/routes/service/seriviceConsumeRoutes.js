@@ -34,6 +34,7 @@ serviceRoutes.get("/", async (req, res) => {
   }
 });
 
+
 serviceRoutes.get("/:id", async (req, res) => {
   try {
     const id = req.params.id;
@@ -46,7 +47,7 @@ serviceRoutes.get("/:id", async (req, res) => {
       `SELECT * FROM service_images WHERE service_id = ?`,
       [id],
     );
-    console.log(rows);
+    
     if (rows.length === 0) {
       return res.status(404).json({ message: "No images found" });
     }

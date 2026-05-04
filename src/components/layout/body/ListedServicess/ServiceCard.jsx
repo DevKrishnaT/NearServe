@@ -16,13 +16,14 @@ const ServiceCard = ({ service, showLocation = true, booknow = true }) => {
     price_type,
     experience,
     description,
-    name,
+
     distance,
     eta,
     verified,
   } = service;
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const fetchImages = async () => {
       if (!id) {
@@ -39,11 +40,7 @@ const ServiceCard = ({ service, showLocation = true, booknow = true }) => {
 
     fetchImages();
   }, [id]);
-useEffect(() => {
-  console.log(images);
-  
-})
-  
+  const [name, setname] = useState();
 
   const theme = useTheme((state) => state.theme);
   const isDark = theme === "dark";
@@ -78,11 +75,6 @@ useEffect(() => {
           {title}
         </h3>
 
-        <p className="text-sm opacity-70">
-          by{" "}
-          <span className="font-medium">{provider || name || "Unknown"}</span>
-        </p>
-
         {experience != null && (
           <span className="text-lg bg-blue-100 text-blue-600 px-2 py-1 rounded-md w-fit">
             {experience}+ yrs experience
@@ -98,7 +90,13 @@ useEffect(() => {
         {showLocation && (distance != null || eta != null) && (
           <div className="flex items-center justify-between text-sm opacity-80">
             {distance != null && (
-              <span className="flex gap-1 items-center">📍 {distance} km</span>
+              <span className="flex gap-1 items-center">
+                📍{" "}
+                {Math.floor(distance / 1000) == 0
+                  ? 1
+                  : Math.floor(distance / 1000)}{" "}
+                km
+              </span>
             )}
 
             {eta != null && (

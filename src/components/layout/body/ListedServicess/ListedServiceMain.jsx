@@ -7,11 +7,29 @@ const ListedServiceMain = () => {
   const theme = useTheme((state) => state.theme);
   const isdark = theme == "dark";
   const [services, setServices] = useState([]);
+  
 
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const { data } = await api.get("/services");
+       const localstprage = JSON.parse(localStorage.getItem("userLocation"));
+      const address = {
+        
+        latitude: localstprage.latitude,
+        longitude: localstprage.longitude
+      }
+      
+      
+       
+     
+       
+       
+
+        
+        const { data } = await api.post("/services", {
+          address,
+        });
+        console.log("stated");
         console.log(data.services);
         setServices(data.services);
       } catch (error) {

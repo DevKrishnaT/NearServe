@@ -165,7 +165,7 @@ const Dashboard = () => {
                 </>
               ) : (
                 <>
-                  <div className="text-xl font-semibold">{DBuser.name}</div>{" "}
+                  <div className="text-xl font-semibold">{DBuser.name || "unknown"}</div>{" "}
                   <div className="" onClick={handelClick}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
