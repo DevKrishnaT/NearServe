@@ -5,6 +5,7 @@ import Inputbox from "../../../ui/Inputbox";
 import AutoL from "../AutoLocationDetor/AutoL";
 import CurrAdress from "../CurrentAdress/CurrAdress";
 import { suggestionData } from "../../../../Context/Location/SuggestAdress";
+import useLocationState from "../../../../Context/Location/useRealLocation";
 
 const LocationSelector = () => {
   const theme = useTheme((state) => state.theme);
@@ -12,6 +13,7 @@ const LocationSelector = () => {
   const togglelocationbar = useLocation((state) => state.togglelocationbar);
   const [suggestion, setSuggestions] = useState([]);
   const [data, setdata] = useState("");
+  const setUserLocation = useLocationState((state) => state.setUserLocation);
   const border = "border  w-full h-8 p-2";
 
   const HandelInputChange = async (value) => {
@@ -49,7 +51,7 @@ const LocationSelector = () => {
     };
     console.log(location);
 
-    localStorage.setItem("userLocation", JSON.stringify(location));
+    setUserLocation(location);
 
     setdata("");
     setSuggestions([]);

@@ -1,17 +1,45 @@
-import React from "react";
+import React, { useState } from "react";
 import HeaderLogo from "../../ui/headerLogo";
 import useTheme from "../../../Context/Theme/ThemeContext";
 import { useNavigate } from "react-router-dom";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import useLogin from "../../../Context/Login/useLogin";
+import api from "../../../Context/api/api";
 
 const Footer = () => {
   const theme = useTheme((state) => state.theme);
   const isdark = theme == "dark";
   const navigate = useNavigate();
+  const auth = getAuth();
+  const openLogin = useLogin((state) => state.openLogin);
+  const [isProvider, setIsProvider] = useState(false);
 
-  const redirectProvider = () => {
-    navigate('/provider');
-  }
-  
+  const redirectProvider = async () => {
+    const user = auth.currentUser;
+    if (!user) {
+      openLogin();
+      return;
+    }
+
+    try {
+      const token = await user.getIdToken();
+
+      const res = await api.get("/isprovider", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const isProvider = res.data.isProvider;
+      if(isProvider){
+        navigate("/provider-dashboard");
+      }else{
+        navigate("/list-service");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div
       className={`flex flex-col  ${isdark ? "bg-[#1E293B]" : "bg-[#F8FAFC]"} px-6 py-4 lg:px-50`}
@@ -32,16 +60,25 @@ const Footer = () => {
           <ul
             className={`${isdark ? "text-[#94A3B8]" : "text-[#64748B]"} flex flex-col gap-1 cursor-pointer`}
           >
-            <li className={`${isdark ? "liDark" : "liLight"} transition-colors`}>
+            <li
+              className={`${isdark ? "liDark" : "liLight"} transition-colors`}
+            >
               Browse Services
             </li>
-            <li className={`${isdark ? "liDark" : "liLight"} transition-colors`} onClick={redirectProvider}>
+            <li
+              className={`${isdark ? "liDark" : "liLight"} transition-colors`}
+              onClick={redirectProvider}
+            >
               Become a Provider
             </li>
-            <li className={`${isdark ? "liDark" : "liLight"} transition-colors`}>
+            <li
+              className={`${isdark ? "liDark" : "liLight"} transition-colors`}
+            >
               Book a Service
             </li>
-            <li className={`${isdark ? "liDark" : "liLight"} transition-colors`}>
+            <li
+              className={`${isdark ? "liDark" : "liLight"} transition-colors`}
+            >
               Categories
             </li>
           </ul>
@@ -55,14 +92,24 @@ const Footer = () => {
           <ul
             className={`${isdark ? "text-[#94A3B8]" : "text-[#64748B]"} flex flex-col gap-1 cursor-pointer`}
           >
-            <li className={`${isdark ? "liDark" : "liLight"} transition-colors`}>About</li>
-            <li className={`${isdark ? "liDark" : "liLight"} transition-colors`}>
+            <li
+              className={`${isdark ? "liDark" : "liLight"} transition-colors`}
+            >
+              About
+            </li>
+            <li
+              className={`${isdark ? "liDark" : "liLight"} transition-colors`}
+            >
               How It Works
             </li>
-            <li className={`${isdark ? "liDark" : "liLight"} transition-colors`}>
+            <li
+              className={`${isdark ? "liDark" : "liLight"} transition-colors`}
+            >
               Privacy Policy
             </li>
-            <li className={`${isdark ? "liDark" : "liLight"} transition-colors`}>
+            <li
+              className={`${isdark ? "liDark" : "liLight"} transition-colors`}
+            >
               Terms of Service
             </li>
           </ul>
@@ -76,15 +123,27 @@ const Footer = () => {
           <ul
             className={`${isdark ? "text-[#94A3B8]" : "text-[#64748B]"} flex flex-col gap-1 cursor-pointer`}
           >
-            <li className={`${isdark ? "liDark" : "liLight"} transition-colors`}>
+            <li
+              className={`${isdark ? "liDark" : "liLight"} transition-colors`}
+            >
               {" "}
               Help Center
             </li>
-            <li className={`${isdark ? "liDark" : "liLight"} transition-colors`}>Contact</li>
-            <li className={`${isdark ? "liDark" : "liLight"} transition-colors`}>
+            <li
+              className={`${isdark ? "liDark" : "liLight"} transition-colors`}
+            >
+              Contact
+            </li>
+            <li
+              className={`${isdark ? "liDark" : "liLight"} transition-colors`}
+            >
               Report Issue
             </li>
-            <li className={`${isdark ? "liDark" : "liLight"} transition-colors`}>FAQs</li>
+            <li
+              className={`${isdark ? "liDark" : "liLight"} transition-colors`}
+            >
+              FAQs
+            </li>
           </ul>
         </div>
         <div className="flex flex-col gap-1">
@@ -122,10 +181,7 @@ const Footer = () => {
               className={` ${isdark ? "text-[#94A3B8] hover:text-white" : "text-[#64748B] hover:text-[#296dda]"}  transition-colors`}
               fill="currentColor"
             >
-              <path
-                
-                d="M9.294 6.928L14.357 1h-1.2L8.762 6.147L5.25 1H1.2l5.31 7.784L1.2 15h1.2l4.642-5.436L10.751 15h4.05L9.294 6.928ZM7.651 8.852l-.538-.775L2.832 1.91h1.843l3.454 4.977l.538.775l4.491 6.47h-1.843l-3.664-5.28Z"
-              />
+              <path d="M9.294 6.928L14.357 1h-1.2L8.762 6.147L5.25 1H1.2l5.31 7.784L1.2 15h1.2l4.642-5.436L10.751 15h4.05L9.294 6.928ZM7.651 8.852l-.538-.775L2.832 1.91h1.843l3.454 4.977l.538.775l4.491 6.47h-1.843l-3.664-5.28Z" />
             </svg>
           </div>
         </div>

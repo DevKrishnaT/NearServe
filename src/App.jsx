@@ -42,8 +42,8 @@ const App = () => {
        <div id="recaptcha-container"></div>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/provider" element= {<ProviderPage />} />
-          <Route path="/provider/dashboard" element= {<Dashboard />}/>
+          <Route path="/list-service" element= {<ProviderPage />} />
+          <Route path="/provider-dashboard" element= {<Dashboard />}/>
         </Routes>
       </div>
     </BrowserRouter>
