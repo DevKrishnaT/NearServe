@@ -11,6 +11,7 @@ import Menu from "../menu/menu";
 
 const Header = () => {
   const theme = useTheme((state) => state.theme);
+  const [sugeestion , setSuggestions] = useState(true);
  
 
   return (
@@ -35,7 +36,7 @@ const Header = () => {
         <Inputbox  />
 
         <div
-          className={`absolute top-2 lg:top-3 left-3 flex gap-1 z-10 pointer-events-none ${
+          className={`${sugeestion ? "absolute" : "hidden"} top-2 lg:top-3 left-3 flex gap-1 z-10 pointer-events-none ${
             theme === "dark" ? "text-[#F1F5F9]" : "text-[#0F172A]"
           }`}
         >

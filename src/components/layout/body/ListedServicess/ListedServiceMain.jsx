@@ -12,20 +12,12 @@ const ListedServiceMain = () => {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-       const localstprage = JSON.parse(localStorage.getItem("userLocation"));
-      const address = {
-        
-        latitude: localstprage.latitude,
-        longitude: localstprage.longitude
-      }
-      
-      
-       
-     
-       
-       
+        const localstprage = JSON.parse(localStorage.getItem("userLocation"));
+        const address = {
+          latitude: localstprage.latitude,
+          longitude: localstprage.longitude,
+        };
 
-        
         const { data } = await api.post("/services", {
           address,
         });
@@ -52,9 +44,14 @@ const ListedServiceMain = () => {
         className={`grid grid-cols-1 mx-6 py-4  gap-4 md:grid-cols-2   lg:grid-cols-4  ${isdark ? "bg-[#0F172A]" : "bg-[#FFFFFF]"}`}
       >
         {services.map((item) => (
-          <ServiceCard key={item.id} service={item} />
+          <ServiceCard
+            key={item.id}
+            service={item}
+           
+          />
         ))}
       </div>
+      
     </div>
   );
 };

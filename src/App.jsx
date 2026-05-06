@@ -9,6 +9,7 @@ import useLocationState from "./Context/Location/useRealLocation";
 import { DetectLocation } from "./Context/Location/detectLocation";
 import ProviderPage from "./components/provider/providerPage";
 import Dashboard from "./components/provider/dashboard/dashboard";
+import BookService from "./components/layout/booking/bookService";
 
 const App = () => {
   const theme = useTheme((state) => state.theme);
@@ -44,6 +45,7 @@ const App = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/list-service" element= {<ProviderPage />} />
           <Route path="/provider-dashboard" element= {<Dashboard />}/>
+          <Route path="/book" element= {<BookService/>} />
         </Routes>
       </div>
     </BrowserRouter>

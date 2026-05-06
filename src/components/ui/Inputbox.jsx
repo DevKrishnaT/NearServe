@@ -1,7 +1,7 @@
 import React from "react";
 import useTheme from "../../Context/Theme/ThemeContext";
 
-const Inputbox = ({placeholderText}) => {
+const Inputbox = ({placeholderText , onclick }) => {
   const size = {
     sm: 100,
     lg: 200,
@@ -15,6 +15,8 @@ const Inputbox = ({placeholderText}) => {
         type="text"
         className="flex-8  border-0 flex px-2 items-center h-full w-full focus:outline-0"
         placeholder={placeholderText}
+        
+       
       />
       <svg
         xmlns="http://www.w3.org/2000/svg"

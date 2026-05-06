@@ -24,6 +24,7 @@ const ServiceCard = ({ service, showLocation = true, booknow = true }) => {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
 
+
   useEffect(() => {
     const fetchImages = async () => {
       if (!id) {
@@ -44,6 +45,9 @@ const ServiceCard = ({ service, showLocation = true, booknow = true }) => {
 
   const theme = useTheme((state) => state.theme);
   const isDark = theme === "dark";
+  const handleServiceClick = (item) => {
+    setSlectedService(item);
+  };
 
   return (
     <div
@@ -55,6 +59,7 @@ const ServiceCard = ({ service, showLocation = true, booknow = true }) => {
       transition-all duration-200
       flex flex-col
       `}
+      
     >
       <div className="h-44 w-full overflow-hidden flex justify-center items-center">
         {!loading ? (
@@ -133,7 +138,9 @@ const ServiceCard = ({ service, showLocation = true, booknow = true }) => {
             Book Now
           </button>
         )}
+       
       </div>
+      
     </div>
   );
 };
