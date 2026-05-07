@@ -3,6 +3,7 @@ import img from "../../../../uploads/test.png";
 import useTheme from "../../../../Context/Theme/ThemeContext";
 import { useState } from "react";
 import api from "../../../../Context/api/api";
+import { useNavigate } from "react-router-dom";
 
 const ServiceCard = ({ service, showLocation = true, booknow = true }) => {
   const {
@@ -23,7 +24,7 @@ const ServiceCard = ({ service, showLocation = true, booknow = true }) => {
   } = service;
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -48,6 +49,9 @@ const ServiceCard = ({ service, showLocation = true, booknow = true }) => {
   const handleServiceClick = (item) => {
     setSlectedService(item);
   };
+  const handleBookClick = (id) => {
+    navigate(`/book/${id}`);
+  };
 
   return (
     <div
@@ -59,7 +63,6 @@ const ServiceCard = ({ service, showLocation = true, booknow = true }) => {
       transition-all duration-200
       flex flex-col
       `}
-      
     >
       <div className="h-44 w-full overflow-hidden flex justify-center items-center">
         {!loading ? (
@@ -134,13 +137,12 @@ const ServiceCard = ({ service, showLocation = true, booknow = true }) => {
               : "bg-[#2563EB] hover:bg-[#1d4ed8] text-white"
           }
           `}
+            onClick={() => handleBookClick()}
           >
             Book Now
           </button>
         )}
-       
       </div>
-      
     </div>
   );
 };
