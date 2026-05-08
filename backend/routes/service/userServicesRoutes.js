@@ -58,5 +58,27 @@ userSerices.post("/", async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 });
+userSerices.get("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const service = await pool.query("SELECT * FROM services WHERE id = ?", [
+      id,
+    ]);
+
+    if (!server.length) {
+      return res.status(404).json({
+        message: "Service not found",
+      });
+    }
+    res.status(200).json(service[0]);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Server Error",
+    });
+  }
+});
 
 export default userSerices;
