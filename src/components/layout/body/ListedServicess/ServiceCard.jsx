@@ -49,7 +49,7 @@ const ServiceCard = ({ service, showLocation = true, booknow = true }) => {
   const handleServiceClick = (item) => {
     setSlectedService(item);
   };
-  const handleBookClick = (id) => {
+  const handleBookClick = () => {
     navigate(`/book/${id}`);
   };
 

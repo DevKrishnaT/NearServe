@@ -62,11 +62,11 @@ userSerices.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
-    const service = await pool.query("SELECT * FROM services WHERE id = ?", [
+    const [service] = await pool.query("SELECT * FROM services WHERE id = ?", [
       id,
     ]);
 
-    if (!server.length) {
+    if (!service.length) {
       return res.status(404).json({
         message: "Service not found",
       });
