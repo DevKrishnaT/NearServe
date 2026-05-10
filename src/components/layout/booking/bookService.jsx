@@ -16,7 +16,7 @@ const BookService = () => {
   const [imgLoading, setImgLoading] = useState(true);
   const [images, setImages] = useState([]);
   const [addresses, setAddresses] = useState([]);
-  const [addressesLoading, setAddressesLoading] = useState(true);
+  const [addressesLoading, setAddressesLoading] = useState(false);
   const [open, setOpen] = useState(true);
   const [suggestions, setSuggestions] = useState([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
