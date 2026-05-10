@@ -1,20 +1,13 @@
 import express from "express";
 import pool from "../../dbconnection/db.js";
 import admin from "firebase-admin";
+import verifyToken from "../../middleman.js";
 
 const serviceRoutes = express.Router();
 
-serviceRoutes.get("/", async (req, res) => {
+serviceRoutes.get("/", verifyToken, async (req, res) => {
   try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({ message: "Not authorized" });
-    }
-
-    const token = authHeader.split(" ")[1];
-
-    const decoded = await admin.auth().verifyIdToken(token);
-    const uid = decoded.uid;
+    const uid = req.user.uid;
 
     const [services] = await pool.query(
       `SELECT services.*, users.name 
@@ -34,7 +27,6 @@ serviceRoutes.get("/", async (req, res) => {
   }
 });
 
-
 serviceRoutes.get("/:id", async (req, res) => {
   try {
     const id = req.params.id;
@@ -47,11 +39,10 @@ serviceRoutes.get("/:id", async (req, res) => {
       `SELECT * FROM service_images WHERE service_id = ?`,
       [id],
     );
-    
+
     if (rows.length === 0) {
       return res.status(404).json({ message: "No images found" });
     }
-    
 
     return res.status(200).json({ images: rows });
   } catch (error) {

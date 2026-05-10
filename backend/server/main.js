@@ -9,6 +9,7 @@ import providerRouter from "../routes/provider/serviceRoutes.js";
 import serviceRoutes from "../routes/service/seriviceConsumeRoutes.js";
 import userSerices from "../routes/service/userServicesRoutes.js";
 import checkForProvider from "../routes/provider/checkForProvider.js";
+import userAddressRouter from "../routes/users/userAddress.js";
 
 const serviceAccount = JSON.parse(
   fs.readFileSync("../serviceAccountKey/ServiceAccountKey.json", "utf-8"),
@@ -39,10 +40,10 @@ app.get("/", (req, res) => {
 
 app.use("/api/user", userRouter);
 app.use("/api/provider/list", providerRouter);
-app.use("/api/provider/services" , serviceRoutes);
-app.use("/api/services" , userSerices);
-app.use("/api/isprovider" , checkForProvider);
-
+app.use("/api/provider/services", serviceRoutes);
+app.use("/api/services", userSerices);
+app.use("/api/isprovider", checkForProvider);
+app.use("/api/user/address", userAddressRouter);
 
 app.listen(4000, async () => {
   try {
