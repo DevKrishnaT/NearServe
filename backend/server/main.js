@@ -10,6 +10,7 @@ import serviceRoutes from "../routes/service/seriviceConsumeRoutes.js";
 import userSerices from "../routes/service/userServicesRoutes.js";
 import checkForProvider from "../routes/provider/checkForProvider.js";
 import userAddressRouter from "../routes/users/userAddress.js";
+import useOrder from "../routes/order/placeOrder.js";
 
 const serviceAccount = JSON.parse(
   fs.readFileSync("../serviceAccountKey/ServiceAccountKey.json", "utf-8"),
@@ -44,6 +45,7 @@ app.use("/api/provider/services", serviceRoutes);
 app.use("/api/services", userSerices);
 app.use("/api/isprovider", checkForProvider);
 app.use("/api/user/address", userAddressRouter);
+app.use("/api/order", useOrder);
 
 app.listen(4000, async () => {
   try {
