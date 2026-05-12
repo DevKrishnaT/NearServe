@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 export default function OrderPlacedPopup({ open = true, onClose }) {
   const theme = useTheme((state) => state.theme);
   const navigate = useNavigate();
+  const openOrderPannel = useOrder((state) => state.openOrderPannel);
 
   const isDark = theme === "dark";
   useEffect(() => {
@@ -16,7 +17,9 @@ export default function OrderPlacedPopup({ open = true, onClose }) {
       return () => clearTimeout(timer);
     }
   }, [open, navigate]);
-
+  const handelDoneButton = () => {
+    navigate("/");
+  };
   const colors = {
     background: isDark ? "#0F172A" : "#FFFFFF",
     surface: isDark ? "#1E293B" : "#F8FAFC",
@@ -84,7 +87,7 @@ export default function OrderPlacedPopup({ open = true, onClose }) {
         </div>
 
         <button
-          onClick={onClose}
+          onClick={() => handelDoneButton()}
           className="w-full mt-8 py-3 rounded-2xl font-semibold transition-all duration-300 hover:scale-[1.01]"
           style={{
             backgroundColor: colors.primary,
