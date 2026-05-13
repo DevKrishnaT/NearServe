@@ -3,11 +3,17 @@ import useTheme from "../../../../Context/Theme/ThemeContext";
 import ServiceCard from "./ServiceCard";
 import api from "../../../../Context/api/api";
 
-const ListedServiceMain = () => {
+const ListedServiceMain = ({ selectedCategory }) => {
   const theme = useTheme((state) => state.theme);
   const isdark = theme == "dark";
   const [services, setServices] = useState([]);
-  
+  const filteredServices =
+    selectedCategory === ""
+      ? services
+      : services.filter(
+          (service) =>
+            service.category?.toLowerCase() === selectedCategory.toLowerCase(),
+        );
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -21,8 +27,7 @@ const ListedServiceMain = () => {
         const { data } = await api.post("/services", {
           address,
         });
-        console.log("stated");
-        console.log(data.services);
+
         setServices(data.services);
       } catch (error) {
         console.error(error);
@@ -43,15 +48,18 @@ const ListedServiceMain = () => {
       <div
         className={`grid grid-cols-1 mx-6 py-4  gap-4 md:grid-cols-2   lg:grid-cols-4  ${isdark ? "bg-[#0F172A]" : "bg-[#FFFFFF]"}`}
       >
-        {services.map((item) => (
-          <ServiceCard
-            key={item.id}
-            service={item}
-           
-          />
-        ))}
+        {filteredServices.length !== 0 ? (
+          filteredServices.map((item) => (
+            <ServiceCard key={item.id} service={item} />
+          ))
+        ) : (
+          <>
+            <div className={`${isdark ? "text-white" : "text-black"} text-xl`}>
+              Try removing filters — no service found.
+            </div>
+          </>
+        )}
       </div>
-      
     </div>
   );
 };

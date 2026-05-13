@@ -8,10 +8,13 @@ import ThemeToggle from "../../features/ThemeToggle/ThemeToggle";
 import useTheme from "../../../Context/Theme/ThemeContext";
 import AnimatedPlaceHolder from "../../ui/AnimatedPlaceHolder";
 import Menu from "../menu/menu";
+import useSearchBar from "../../../Context/handelSearch";
 
 const Header = () => {
   const theme = useTheme((state) => state.theme);
+  const isSearchBarOnFocus = useSearchBar((state) => state.isSearchBarOnFocus );
   const [sugeestion , setSuggestions] = useState(true);
+
  
 
   return (
@@ -36,7 +39,7 @@ const Header = () => {
         <Inputbox  />
 
         <div
-          className={`${sugeestion ? "absolute" : "hidden"} top-2 lg:top-3 left-3 flex gap-1 z-10 pointer-events-none ${
+          className={`${!isSearchBarOnFocus ? "absolute" : "hidden"} top-2 lg:top-3 left-3 flex gap-1 z-10 pointer-events-none ${
             theme === "dark" ? "text-[#F1F5F9]" : "text-[#0F172A]"
           }`}
         >

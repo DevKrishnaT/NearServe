@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import useTheme from "../../../../Context/Theme/ThemeContext";
 import Cradslayout from "./cards/cradslayout";
+
 import plumber from "../../../../assets/Images/plumber.png";
 import cleaner from "../../../../assets/Images/cleaner.png";
 import electrition from "../../../../assets/Images/electrition.png";
@@ -8,8 +9,42 @@ import tutor from "../../../../assets/Images/tutor.png";
 import AC_Service from "../../../../assets/Images/Applienc.png";
 import technician from "../../../../assets/Images/technician.png";
 
-const ServicesSection = () => {
+const ServicesSection = ({ selectedCategory, setSelectedCategory }) => {
   const theme = useTheme((state) => state.theme);
+
+  const services = [
+    {
+      img: plumber,
+      title: "Plumber",
+      category: "plumbing",
+    },
+    {
+      img: electrition,
+      title: "Electrician",
+      category: "electrician",
+    },
+    {
+      img: tutor,
+      title: "Tutor",
+      category: "tutor",
+    },
+    {
+      img: cleaner,
+      title: "Cleaner",
+      category: "cleaning",
+    },
+    {
+      img: AC_Service,
+      title: "AC Service",
+      category: "repair",
+    },
+    {
+      img: technician,
+      title: "Technician",
+      category: "repair",
+    },
+  ];
+  const [active, setActive] = useState(false);
 
   return (
     <div
@@ -25,28 +60,31 @@ const ServicesSection = () => {
         Explore Services
       </span>
 
-      <div className="flex gap-4 overflow-x-auto custom-scrollbar ">
-        <div className="min-w-[45%] sm:min-w-[30%] md:min-w-[22%] lg:min-w-[18%]">
-          <Cradslayout img={plumber} title="Plumber" />
-        </div>
-
-        <div className="min-w-[45%] sm:min-w-[30%] md:min-w-[22%] lg:min-w-[18%]">
-          <Cradslayout img={electrition} title="Electrician" />
-        </div>
-
-        <div className="min-w-[45%] sm:min-w-[30%] md:min-w-[22%] lg:min-w-[18%]">
-          <Cradslayout img={tutor} title="Tutor" />
-        </div>
-
-        <div className="min-w-[45%] sm:min-w-[30%] md:min-w-[22%] lg:min-w-[18%]">
-          <Cradslayout img={cleaner} title="Cleaner" />
-        </div>
-        <div className="min-w-[45%] sm:min-w-[30%] md:min-w-[22%] lg:min-w-[18%]">
-          <Cradslayout img={AC_Service} title="AC Service" />
-        </div>
-        <div className="min-w-[45%] sm:min-w-[30%] md:min-w-[22%] lg:min-w-[18%]">
-          <Cradslayout img={technician} title="technician" />
-        </div>
+      <div className="flex gap-4 overflow-x-auto custom-scrollbar">
+        {services.map((service, index) => (
+          <div
+            key={index}
+            className={`
+              min-w-[45%]
+              sm:min-w-[30%]
+              md:min-w-[22%]
+              lg:min-w-[18%]
+              cursor-pointer
+               ${
+                 selectedCategory === service.category
+                   ? "border-4 rounded-2xl border-blue-400 "
+                   : ""
+               }
+            `}
+            onClick={() =>
+              setSelectedCategory(
+                selectedCategory === service.category ? "" : service.category,
+              )
+            }
+          >
+            <Cradslayout img={service.img} title={service.title} />
+          </div>
+        ))}
       </div>
     </div>
   );

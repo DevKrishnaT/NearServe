@@ -14,6 +14,9 @@ const ProviderMenu = ({ child }) => {
   const ListServices = () => {
     navigate("/provider");
   };
+  const handleListService = () => {
+    navigate("/list-service");
+  }
 
   const theme = useTheme((state) => state.theme);
   const toggleTheme = useTheme((state) => state.toggleTheme);
@@ -104,7 +107,8 @@ const ProviderMenu = ({ child }) => {
         <div
           className={`${theme === "dark" ? "text-white" : "text-black"} flex items-center px-2 `}
         >
-          <button className="flex gap-4">
+          <button className="flex gap-4"
+          onClick={handleListService}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
