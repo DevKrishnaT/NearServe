@@ -1,11 +1,12 @@
 import { useEffect } from "react";
 import useTheme from "../../Context/Theme/ThemeContext";
 import { useNavigate } from "react-router-dom";
+import useOrdersPannel from "../../Context/useOrdersProvider";
 
 export default function OrderPlacedPopup({ open = true, onClose }) {
   const theme = useTheme((state) => state.theme);
   const navigate = useNavigate();
-  const openOrderPannel = useOrder((state) => state.openOrderPannel);
+  const openOrderPannel = useOrdersPannel((state) => state.openOrderPannel);
 
   const isDark = theme === "dark";
   useEffect(() => {

@@ -46,6 +46,7 @@ const App = () => {
           <Route path="/list-service" element= {<ProviderPage />} />
           <Route path="/provider-dashboard" element= {<Dashboard />}/>
           <Route path="/book/:id" element= {<BookService/>} />
+          
         </Routes>
       </div>
     </BrowserRouter>
