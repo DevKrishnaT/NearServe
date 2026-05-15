@@ -3,7 +3,7 @@ import express from "express";
 import pool from "../dbconnection/db.js";
 import admin from "firebase-admin";
 import cors from "cors";
-import fs from "fs";
+
 import userRouter from "../routes/users/userRoutes.js";
 import providerRouter from "../routes/provider/serviceRoutes.js";
 import serviceRoutes from "../routes/service/seriviceConsumeRoutes.js";
@@ -30,10 +30,10 @@ dotenv.config({
 const { default: userSerices } = await import(
   "../routes/service/userServicesRoutes.js" 
 );
-
 const serviceAccount = JSON.parse(
-  fs.readFileSync("../serviceAccountKey/ServiceAccountKey.json", "utf-8"),
+  process.env.FIREBASE_SERVICE_ACCOUNT
 );
+
 if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
