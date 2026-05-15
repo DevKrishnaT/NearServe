@@ -1,5 +1,5 @@
 import express from "express";
-
+import "./config/env.js";
 import pool from "../dbconnection/db.js";
 import admin from "firebase-admin";
 import cors from "cors";
@@ -16,17 +16,7 @@ import getOrdersProviders from "../routes/provider/getOrdersProviders.js";
 import acceptOrder from "../routes/order/AcceptOrder.js";
 import InProgress from "../routes/order/inProggressOrder.js";
 import CompleteOrder from "../routes/order/completeOrder.js";
-import { fileURLToPath } from "url";
-import path from "path";
-import dotenv from "dotenv";
 
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-dotenv.config({
-  path: path.join(__dirname, "../.env"),
-});
 const { default: userSerices } = await import(
   "../routes/service/userServicesRoutes.js" 
 );
