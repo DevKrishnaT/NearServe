@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import useTheme from "../../Context/Theme/ThemeContext";
 import useSearchBar from "../../Context/handelSearch";
+import useSearchStore from "../../Context/useSearchStore";
 
 const Inputbox = ({ placeholderText, onclick }) => {
   const size = {
@@ -11,16 +12,21 @@ const Inputbox = ({ placeholderText, onclick }) => {
   const setSBOnFocus = useSearchBar((state) => state.setSBOnFocus);
   const unSetSBOnFocus = useSearchBar((state) => state.unSetSBOnFocus);
 
+  const search = useSearchStore((state) => state.search);
+  const setSearch = useSearchStore((state) => state.setSearch);
+
   const handelOnFocus = () => {
     setSBOnFocus();
   };
   const handelOnBlur = () => {
-    unSetSBOnFocus();
+    if (search.trim() === "") {
+      unSetSBOnFocus();
+    }
   };
 
   return (
     <div
-      className={`input border flex w-full  rounded-2xl h-10 lg:h-12 items-center px-2 ${theme == "dark" ? "border-white text-white placeholder:text-white" : "border-black"} `}
+      className={`input border flex w-full rounded-2xl h-10 lg:h-12 items-center px-2 ${theme == "dark" ? "border-white text-white placeholder:text-white" : "border-black"} `}
     >
       <input
         type="text"
@@ -28,6 +34,8 @@ const Inputbox = ({ placeholderText, onclick }) => {
         placeholder={placeholderText}
         onFocus={handelOnFocus}
         onBlur={handelOnBlur}
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
       />
       <svg
         xmlns="http://www.w3.org/2000/svg"

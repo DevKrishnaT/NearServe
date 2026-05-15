@@ -1,11 +1,15 @@
 import express from "express";
-import { createClient } from "redis";
+import { Redis } from "@upstash/redis";
 import pool from "../../dbconnection/db.js";
 
-const userSerices = express.Router();
+console.log("URL =", process.env.UPSTASH_REDIS_REST_URL);
+console.log("TOKEN =", process.env.UPSTASH_REDIS_REST_TOKEN);
 
-const redisClient = createClient();
-await redisClient.connect();
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+});
+const userSerices = express.Router();
 
 userSerices.post("/", async (req, res) => {
   try {
@@ -20,14 +24,14 @@ userSerices.post("/", async (req, res) => {
     let cachedData;
 
     try {
-      cachedData = await redisClient.get(cacheKey);
+      cachedData = await redis.get(cacheKey);
     } catch (err) {
       console.log("Redis read error:", err.message);
     }
 
     if (cachedData) {
       console.log("CACHE HIT");
-      return res.status(200).json({ services: JSON.parse(cachedData) });
+      return res.status(200).json({ services: cachedData });
     }
 
     console.log("CACHE MISS");
@@ -47,7 +51,9 @@ userSerices.post("/", async (req, res) => {
 
     if (services.length > 0) {
       try {
-        await redisClient.setEx(cacheKey, 300, JSON.stringify(services));
+        await redis.set(cacheKey, services, {
+          ex: 300,
+        });
       } catch (err) {
         console.log("Redis write error:", err.message);
       }
@@ -55,7 +61,11 @@ userSerices.post("/", async (req, res) => {
 
     return res.status(200).json({ services });
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    console.error("FULL ERROR:", error);
+
+    return res.status(500).json({
+      message: error.message,
+    });
   }
 });
 userSerices.get("/:id", async (req, res) => {

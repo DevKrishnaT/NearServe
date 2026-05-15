@@ -7,7 +7,7 @@ import fs from "fs";
 import userRouter from "../routes/users/userRoutes.js";
 import providerRouter from "../routes/provider/serviceRoutes.js";
 import serviceRoutes from "../routes/service/seriviceConsumeRoutes.js";
-import userSerices from "../routes/service/userServicesRoutes.js";
+
 import checkForProvider from "../routes/provider/checkForProvider.js";
 import userAddressRouter from "../routes/users/userAddress.js";
 import useOrder from "../routes/order/placeOrder.js";
@@ -16,6 +16,20 @@ import getOrdersProviders from "../routes/provider/getOrdersProviders.js";
 import acceptOrder from "../routes/order/AcceptOrder.js";
 import InProgress from "../routes/order/inProggressOrder.js";
 import CompleteOrder from "../routes/order/completeOrder.js";
+import { fileURLToPath } from "url";
+import path from "path";
+import dotenv from "dotenv";
+
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config({
+  path: path.join(__dirname, "../.env"),
+});
+const { default: userSerices } = await import(
+  "../routes/service/userServicesRoutes.js" 
+);
 
 const serviceAccount = JSON.parse(
   fs.readFileSync("../serviceAccountKey/ServiceAccountKey.json", "utf-8"),

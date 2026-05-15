@@ -2,19 +2,32 @@ import React, { useEffect, useState } from "react";
 import useTheme from "../../../../Context/Theme/ThemeContext";
 import ServiceCard from "./ServiceCard";
 import api from "../../../../Context/api/api";
+import useSearchStore from "../../../../Context/useSearchStore";
 
-const ListedServiceMain = ({ selectedCategory }) => {
+const ListedServiceMain = ({ selectedCategory, title }) => {
   const theme = useTheme((state) => state.theme);
   const isdark = theme == "dark";
   const [services, setServices] = useState([]);
-  const filteredServices =
-    selectedCategory === ""
-      ? services
-      : services.filter(
-          (service) =>
-            service.category?.toLowerCase() === selectedCategory.toLowerCase(),
-        );
+  const search = useSearchStore((state) => state.search);
+  const filteredServices = services.filter((service) => {
+    const matchesCategory =
+      selectedCategory === "" ||
+      service.category?.toLowerCase() === selectedCategory.toLowerCase();
 
+    const searchWords = search.toLowerCase().split(" ");
+
+    const serviceText = `
+    ${service.title || ""}
+    ${service.description || ""}
+    ${service.category || ""}
+  `.toLowerCase();
+
+    const matchesSearch = searchWords.every((word) =>
+      serviceText.includes(word),
+    );
+
+    return matchesCategory && matchesSearch;
+  });
   useEffect(() => {
     const fetchServices = async () => {
       try {
