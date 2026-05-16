@@ -10,6 +10,7 @@ import api from "../../../Context/api/api";
 import { getAuth } from "firebase/auth";
 import SuccsessPop from "./succsessPop";
 import ToggleButton from "../../ui/toggleButton";
+import { useNavigate } from "react-router-dom";
 
 const ListService = () => {
   const theme = useTheme((state) => state.theme);
@@ -21,6 +22,7 @@ const ListService = () => {
   const [error, setError] = useState({});
   const [submitError, setSubmitError] = useState(null);
   const [showPop, setShowPop] = useState(false);
+  const navigate = useNavigate();
 
   const isDark = theme === "dark";
 
@@ -215,6 +217,9 @@ const ListService = () => {
   };
   const auth = getAuth();
   const user = auth.currentUser;
+  const redirectToHome = () => {
+    navigate("/")
+  }
 console.log(user);
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -268,7 +273,7 @@ console.log(user);
         isDark ? "bg-[#0F172A]" : "bg-[#FFFFFF]"
       } flex justify-center`}
     >
-      <ToggleButton />
+      <ToggleButton  toggle={redirectToHome}/>
       <div
         className={`w-full max-w-5xl rounded-2xl border ${borderColor} ${cardBg} p-6 lg:p-8 shadow-sm`}
       >
