@@ -7,6 +7,7 @@ import RoundedButton from "../../ui/button/RoundedButton";
 import { suggestionData } from "../../../Context/Location/SuggestAdress";
 import { LocationToLatLng } from "../../../Context/Location/ChangeLocationTolatlng";
 import OrderPlacedPopup from "../../ui/OrderPlacedPopup";
+import ToggleButton from "../../ui/toggleButton";
 
 const BookService = () => {
   const theme = useTheme((state) => state.theme);
@@ -141,6 +142,7 @@ const BookService = () => {
           : "bg-gray-100 text-black"
       }`}
     >
+      <ToggleButton />
       <div className="flex justify-center items-center mb-10">
         <h1
           className="text-4xl font-extrabold tracking-wide cursor-pointer"

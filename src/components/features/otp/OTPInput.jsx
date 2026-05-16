@@ -1,8 +1,11 @@
 import React, { useRef } from "react";
+import useTheme from "../../../Context/Theme/ThemeContext";
 
 const OTPInput = ({ otp, setOtp }) => {
 
   const inputs = useRef([]);
+  const theme = useTheme((state) => state.theme);
+  const isDark = theme === 'dark';
 
   const handleChange = (value, index) => {
 
@@ -67,7 +70,7 @@ const OTPInput = ({ otp, setOtp }) => {
           onKeyDown={(e) =>
             handleKeyDown(e, index)
           }
-          className="w-12 h-12 text-center text-xl border rounded-lg focus:border-blue-500 outline-none"
+          className={`w-12 h-12 text-center text-xl border rounded-lg focus:border-blue-500 outline-none ${isDark ? "border-white" : "border-black"}`}
         />
 
       ))}

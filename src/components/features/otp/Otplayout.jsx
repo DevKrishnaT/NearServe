@@ -5,6 +5,7 @@ import MainButton from "../../ui/button/mainButton";
 import ToggleButton from "../../ui/toggleButton";
 import api from "../../../Context/api/api";
 import { log } from "firebase/firestore/pipelines";
+import useTheme from "../../../Context/Theme/ThemeContext";
 
 export default function OtpLayout({
   onBack,
@@ -14,6 +15,8 @@ export default function OtpLayout({
 }) {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const theme = useTheme((state) => state.theme);
+  const isDark = theme === 'dark';
   const MAX_RESEND = 3;
   const {
     otp,
@@ -114,7 +117,7 @@ export default function OtpLayout({
   return (
     <div className="flex flex-col gap-6 p-6">
       <ToggleButton toggle={onBack} />
-      <h2 className="text-xl font-bold text-center">Enter 6 digit OTP</h2>
+      <h2 className={`text-xl font-bold text-center ${isDark ? "text-white" : "text-black"}`}>Enter 6 digit OTP</h2>
 
       <OTPInput otp={otp} setOtp={setOtp} />
 
