@@ -9,6 +9,7 @@ import { log } from "firebase/firestore/lite/pipelines";
 import api from "../../../Context/api/api";
 import { getAuth } from "firebase/auth";
 import SuccsessPop from "./succsessPop";
+import ToggleButton from "../../ui/toggleButton";
 
 const ListService = () => {
   const theme = useTheme((state) => state.theme);
@@ -267,6 +268,7 @@ console.log(user);
         isDark ? "bg-[#0F172A]" : "bg-[#FFFFFF]"
       } flex justify-center`}
     >
+      <ToggleButton />
       <div
         className={`w-full max-w-5xl rounded-2xl border ${borderColor} ${cardBg} p-6 lg:p-8 shadow-sm`}
       >

@@ -4,10 +4,10 @@ import { persist } from "zustand/middleware";
 const useTheme = create(
   persist(
     (set, get) => ({
-      theme: "light",
+      theme: "dark",
       toggleTheme: () =>
         set((state) => ({
-          theme: state.theme === "light" ? "dark" : "light",
+          theme: state.theme === "dark" ? "light" : "dark",
         })),
     }),
     {

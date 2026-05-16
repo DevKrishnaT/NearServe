@@ -70,7 +70,7 @@ const OTPInput = ({ otp, setOtp }) => {
           onKeyDown={(e) =>
             handleKeyDown(e, index)
           }
-          className={`w-12 h-12 text-center text-xl border rounded-lg focus:border-blue-500 outline-none ${isDark ? "border-white" : "border-black"}`}
+          className={`w-12 h-12 text-center text-xl border rounded-lg focus:border-blue-500 outline-none ${isDark ? "border-white text-white" : "border-black text-black"}`}
         />
 
       ))}

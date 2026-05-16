@@ -142,7 +142,7 @@ const BookService = () => {
           : "bg-gray-100 text-black"
       }`}
     >
-      <ToggleButton />
+      
       <div className="flex justify-center items-center mb-10">
         <h1
           className="text-4xl font-extrabold tracking-wide cursor-pointer"
