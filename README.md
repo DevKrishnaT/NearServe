@@ -2,7 +2,7 @@
 
 NearServe is a full-stack service marketplace platform that connects customers with local service providers. Users can discover services, manage addresses, place bookings, and track service requests, while providers can manage services and handle bookings through a complete order lifecycle.
 
-The platform is built with a scalable cloud architecture using React, Express.js, PostgreSQL, Redis, and Geoapify.
+The platform is built with a scalable cloud architecture using React, Express.js, MySQL, Redis, and Geoapify.
 
 ---
 
@@ -50,7 +50,7 @@ Backend API (Node.js + Express + Render)
             │
      ┌──────┴──────┐
      ▼             ▼
-PostgreSQL       Redis
+MySQL       Redis
 (Aiven)         (Upstash)
 ```
 
@@ -73,7 +73,7 @@ PostgreSQL       Redis
 
 ### Database
 
-- PostgreSQL
+- MySQL
 - Hosted on Aiven
 
 ### Caching
@@ -206,7 +206,7 @@ Redis caching is used to:
 |----------|----------|
 | Frontend | Vercel |
 | Backend | Render |
-| Database | Aiven PostgreSQL |
+| Database | Aiven MySQL |
 | Cache | Upstash Redis |
 | Maps | Geoapify |
 
@@ -261,7 +261,7 @@ During the development of NearServe, I gained practical experience with:
 
 ##  Project Summary
 
-NearServe is a production-ready full-stack service marketplace built using React, Express.js, PostgreSQL, Redis, and Geoapify. The platform allows customers to book local services efficiently while enabling providers to manage bookings through a structured workflow. The application demonstrates cloud deployment, caching, location services, role-based architecture, and real-world business logic.
+NearServe is a production-ready full-stack service marketplace built using React, Express.js, MySQL, Redis, and Geoapify. The platform allows customers to book local services efficiently while enabling providers to manage bookings through a structured workflow. The application demonstrates cloud deployment, caching, location services, role-based architecture, and real-world business logic.
 
 ---
 
