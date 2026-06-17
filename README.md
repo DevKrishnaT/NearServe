@@ -1,4 +1,4 @@
-# NearServe 🚀
+# NearServe 
 
 NearServe is a full-stack service marketplace platform that connects customers with local service providers. Users can discover services, manage addresses, place bookings, and track service requests, while providers can manage services and handle bookings through a complete order lifecycle.
 
@@ -6,9 +6,9 @@ The platform is built with a scalable cloud architecture using React, Express.js
 
 ---
 
-## ✨ Features
+##  Features
 
-### 👤 Customer Features
+###  Customer Features
 
 - Secure user authentication
 - Browse available services
@@ -30,7 +30,7 @@ The platform is built with a scalable cloud architecture using React, Express.js
 - Mark services as completed
 - Manage provider-specific orders
 
-### 📍 Location Features
+###  Location Features
 
 - Address autocomplete
 - Address validation
@@ -40,7 +40,7 @@ The platform is built with a scalable cloud architecture using React, Express.js
 
 ---
 
-## 🏗️ System Architecture
+##  System Architecture
 
 ```text
 Frontend (React + Vercel)
@@ -96,7 +96,7 @@ PostgreSQL       Redis
 
 ---
 
-## 📡 API Endpoints
+##  API Endpoints
 
 ### User APIs
 
@@ -134,7 +134,7 @@ PostgreSQL       Redis
 
 ---
 
-## 🔄 Booking Workflow
+##  Booking Workflow
 
 ```text
 Customer Selects Service
@@ -157,7 +157,7 @@ Service Completed
 
 ---
 
-## ⚡ Performance Optimization
+##  Performance Optimization
 
 Redis caching is used to:
 
@@ -169,7 +169,7 @@ Redis caching is used to:
 
 ---
 
-## 🗄️ Database Design
+##  Database Design
 
 ### Main Entities
 
@@ -200,7 +200,7 @@ Redis caching is used to:
 
 ---
 
-## 🌐 Deployment
+##  Deployment
 
 | Service | Platform |
 |----------|----------|
@@ -212,7 +212,7 @@ Redis caching is used to:
 
 ---
 
-## 🎯 Challenges Solved
+##  Challenges Solved
 
 ### Location Handling
 
@@ -242,20 +242,9 @@ Separated customer and provider functionality with dedicated APIs and workflows.
 
 ---
 
-## 🚀 Future Improvements
 
-- Real-time notifications
-- Provider ratings and reviews
-- Service scheduling
-- Payment gateway integration
-- Provider availability management
-- Chat between customer and provider
-- Admin dashboard
-- Analytics dashboard
 
----
-
-## 📚 What I Learned
+##  What I Learned
 
 During the development of NearServe, I gained practical experience with:
 
@@ -270,7 +259,7 @@ During the development of NearServe, I gained practical experience with:
 
 ---
 
-## 📌 Project Summary
+##  Project Summary
 
 NearServe is a production-ready full-stack service marketplace built using React, Express.js, PostgreSQL, Redis, and Geoapify. The platform allows customers to book local services efficiently while enabling providers to manage bookings through a structured workflow. The application demonstrates cloud deployment, caching, location services, role-based architecture, and real-world business logic.
 
